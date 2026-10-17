@@ -1,0 +1,25 @@
+{
+  "name": "shanshui-study",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs --host 127.0.0.1",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs --host 127.0.0.1",
+    "check": "vue-tsc --noEmit",
+    "font:update": "node scripts/prepare-font.mjs"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "~5.9.3",
+    "vitepress": "1.6.4",
+    "vue-tsc": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
