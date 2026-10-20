@@ -1,16 +1,18 @@
 ---
 layout: article
-title: 从零搭建一座数字书斋
-description: 用 Vue、Markdown 和自动部署，为自己的项目与思考留一个长期的入口。
+title: 在 github 上如何搭建个人主页的静态网站
+description: 用 VitePress 架构和 github pages 静态网页自动部署，搭建一个属于自己的主页。
 date: '2026-10-17'
 category: 前端开发
-directory: 站点实践
+directory: 静态网站
 tags: [Vue 3, VitePress, GitHub Pages]
 featured: true
-sample: true
+sample: false
 ---
 
-## 从内容开始
+## 前言
+
+个人网页是这个时代当中的一张个人名片。
 
 搭建个人网站时，可以先想清楚三个问题：希望读者了解什么、希望读者找到什么，以及自己以后怎样更新内容。
 

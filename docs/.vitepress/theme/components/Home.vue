@@ -14,19 +14,19 @@ const articles = computed(() => data.filter(p => p.layout === 'article').slice(0
   <main id="main-content">
     <section class="hero page-width">
       <div class="hero-copy">
-        <div class="hero-eyebrow"><span></span> 一隅天地，记录与思考</div>
-        <h1>小舟从此逝去，<br>江海<span class="ink-word">寄余生</span>。</h1>
+        <div class="hero-eyebrow"><span></span> 不识庐山真面目，只缘身在此山中</div>
+        <h1>小舟从此逝，<br>江海<span class="ink-word">寄余生</span>。</h1>
         <p class="hero-description">{{ profile.introduction }}</p>
         <div class="hero-actions"><a class="button button-solid" :href="withBase('/projects/')">探索项目<Icon name="arrow" :size="17" /></a><a class="button button-text" :href="withBase('/journal/')">翻阅笔记<Icon name="book" :size="17" /></a></div>
         <div class="hero-person"><img :src="withBase(profile.avatar)" :alt="`${profile.name} 的头像`" width="38" height="38"><div><span>{{ profile.name }}</span><p>{{ profile.interests.join(' / ') }}</p></div><span class="person-divider"></span><span class="hero-person-note">保持好奇，步履不停</span></div>
       </div>
       <Landscape />
-      <div class="hero-vertical">见天地 · 见自己</div>
+      <div class="hero-vertical">看人间 · 天地宽</div>
       <a href="#selected-projects" class="scroll-cue"><span class="scroll-track"><i></i></span><span>向下，慢慢看</span></a>
       <span class="hero-corner">THOUGHTS TAKE ROOT HERE.</span>
     </section>
 
-    <div class="intro-strip page-width" data-reveal><span class="tiny-label">在这里</span><p>集百家之长。</p><span class="intro-strip-note">探索 / 实践 / 沉淀</span></div>
+    <div class="intro-strip page-width" data-reveal><span class="tiny-label">在这里</span><p>山重水复疑无路，柳暗花明又一村。</p><span class="intro-strip-note">探索 / 实践 / 沉淀</span></div>
 
     <section id="selected-projects" class="section page-width">
       <div class="section-heading" data-reveal><div><div class="eyebrow">01 / SELECTED WORKS</div><h2>让想法，落地生长<span>。</span></h2><p>一些实践，一些尝试，以及从零到一的过程。</p></div><a class="inline-link" :href="withBase('/projects/')">全部项目<Icon name="arrow" :size="17" /></a></div>
