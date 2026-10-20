@@ -1,5 +1,29 @@
 # 山水之间 · 个人网站
 
+## 图表、公式与图片
+
+文章中使用 `mermaid` 代码块即可绘制流程图，例如：
+
+````markdown
+```mermaid
+flowchart TD
+    A[用户需求] --> B[Agent]
+    B --> C[MCP Server]
+```
+````
+
+数学公式支持行内 `$E = mc^2$`，以及单独成段的公式：
+
+```latex
+$$
+P(A \mid B) = \frac{P(B \mid A)P(A)}{P(B)}
+$$
+```
+
+正文图片可点击放大，按 Esc 或再次点击退出；键盘聚焦图片后按 Enter 或空格也可放大。作为链接的图片保留原来的跳转行为。
+
+`npm run build` 会自动检查生成网页中的站内链接、图片路径和章节锚点，检查失败会阻止发布。也可在构建后运行 `npm run check:links`。检查不请求外部网站，也不会将示例代码中的路径当作真实链接。
+
 Vue 3 + TypeScript + VitePress（基于 Vite），通过 GitHub Actions 发布到 GitHub Pages。素纸、淡墨、灰绿，配有鼠标山水视差、卡片微倾斜、点击涟漪和滚动显现。支持手机、键盘操作、日夜主题及减少动态效果偏好。
 
 ## 本地运行

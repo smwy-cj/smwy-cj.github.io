@@ -20,6 +20,17 @@ export default defineConfig({
     ['script', {}, `(function(){try{var t=localStorage.getItem('shanshui-theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');if(localStorage.getItem('shanshui-motion')==='off')document.documentElement.classList.add('motion-off')}catch(e){}})()`]
   ],
   markdown: {
+    math: true,
+    config(md) {
+      const fence = md.renderer.rules.fence!
+      md.renderer.rules.fence = (tokens, index, options, env, self) => {
+        const token = tokens[index]
+        if (token.info.trim() === 'mermaid') {
+          return `<MermaidDiagram source="${md.utils.escapeHtml(token.content)}" />`
+        }
+        return fence(tokens, index, options, env, self)
+      }
+    },
     headers: { level: [2, 3] },
     codeCopyButtonTitle: '复制代码',
     theme: { light: 'github-light', dark: 'github-dark' },

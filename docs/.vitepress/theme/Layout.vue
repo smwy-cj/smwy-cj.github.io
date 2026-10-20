@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useData, useRoute, withBase } from 'vitepress'
 import { profile, navigation } from './site'
 import { useExperience } from './useExperience'
+import { useImageZoom } from './useImageZoom'
+useImageZoom()
 import Home from './components/Home.vue'
 import ContentHub from './components/ContentHub.vue'
 import About from './components/About.vue'
