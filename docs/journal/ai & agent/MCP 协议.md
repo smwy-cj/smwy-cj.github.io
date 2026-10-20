@@ -2,7 +2,7 @@
 layout: article
 title: MCP 协议
 description: MCP 协议是什么，怎么用
-date: 2026-10-16
+date: '2026-10-16'
 category: 学习随笔
 directory: 知识整理
 tags:
@@ -37,7 +37,7 @@ MCP 采用经典 **Client - Server** 架构，主要包含三个核心模块
 
 且若是在Codex 或者 Claude Code 中使用，**普通 MCP 开发者**一般多为创建 MCP Server，Host 与 Client 通常复用现成的实现
 
-[普通开发者如何创建自己的 MCP Server](c:\Users\Clausius Fan\Desktop\smwy-knowledge-base\Jay-Knowledge-Base\08_blog\Agent\如何创建MCP Server.md)
+[普通开发者如何创建自己的 MCP Server](./如何创建MCP%20Server.md)
 
 | MCP 组件 | 示例                                   |
 | ------ | ------------------------------------ |
@@ -91,5 +91,4 @@ flowchart TD
     W --> A
     A --> R["最终目标模型"]
 ```
-
 

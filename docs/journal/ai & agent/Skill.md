@@ -2,7 +2,7 @@
 layout: article
 title: Skill 的工作原理与创建方式
 description: 使用 Skill 让 ai 应用与 agent 应用学会处理更多特定任务
-date: 2026-10-15
+date: '2026-10-15'
 category: 学习随笔
 directory: 知识整理
 tags:
