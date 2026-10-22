@@ -1,1 +1,0 @@
-import{_ as e,b as t,c as a}from"./chunks/framework.D4cM_aKq.js";const m=JSON.parse('{"title":"首页","description":"","frontmatter":{"layout":"home","title":"首页"},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),n={name:"index.md"};function o(r,s,c,i,d,p){return t(),a("div")}const l=e(n,[["render",o]]);export{m as __pageData,l as default};
