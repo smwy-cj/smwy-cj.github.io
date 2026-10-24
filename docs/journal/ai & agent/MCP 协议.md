@@ -6,7 +6,7 @@ date: '2026-10-16'
 category: 学习随笔
 directory: 知识整理
 tags:
-  - Markdown
+  - MCP
   - 学习笔记
   - Agent
 featured: true

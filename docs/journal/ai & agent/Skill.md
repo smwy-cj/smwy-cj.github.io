@@ -7,7 +7,7 @@ category: 学习随笔
 directory: 知识整理
 tags:
   - Markdown
-  - 学习笔记
+  - skill
   - Agent
 featured: true
 sample: false

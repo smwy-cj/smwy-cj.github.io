@@ -73,7 +73,7 @@ function agent_loop(goal):
 			context += message("user", result)
 ```
 
-LLM 从既能返回文本内容，还能进行具体的工具调用，此处还与[MCP](obsidian://open?vault=Jay-Knowledge-base&file=08_blog%2FAgent%2FMCP%20%E5%8D%8F%E8%AE%AE)y有关
+LLM 从既能返回文本内容，还能进行具体的工具调用，此处还与[MCP](./MCP%20协议.md)有关
 
 ## 加入上下文
 
