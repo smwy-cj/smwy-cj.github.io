@@ -1,4 +1,4 @@
-```layout: article
+``````
 title: RAG 的简单介绍
 description: RAG 的演化过程与伪代码实现
 date: '2026-10-24'
@@ -9,9 +9,10 @@ tags:
   - Agent
   - retrieve
   - RAG
-    featured: true
-    sample: false
-```
+featured: true
+sample: false
+layout: article
+``````
 
 ## 简介
 
