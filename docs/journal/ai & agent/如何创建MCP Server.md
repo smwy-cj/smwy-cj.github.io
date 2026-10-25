@@ -1,3 +1,14 @@
+---
+layout: article
+title: 如何创建 MCP Server
+description: 以目标建模为例，创建提供工具、资源与提示模板的 MCP Server，并连接到 Codex。
+date: '2026-10-20'
+category: 学习随笔
+directory: 知识整理
+tags: [MCP, Agent, Python]
+sample: false
+---
+
 以 GoalForge 目标模型构建方向为例，创建一个 `Goal Modeling MCP Server`。
 
 它提供三个能力：检查目标分解结构、读取 KAOS 建模规则、提供需求分析提示模板。
