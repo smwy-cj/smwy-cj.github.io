@@ -38,4 +38,4 @@ sample: true
 
 ## 相关笔记
 
-继续阅读 [RAG：先找到资料，再组织答案](/journal/ai & agent/rag-basics.md)。
+继续阅读 [RAG：先找到资料，再组织答案](</journal/ai & agent/rag-basics.md>)。

@@ -1,6 +1,6 @@
 ---
 layout: article
-title: RAG 的简单介绍
+title: RAG：从经典检索增强到 Agentic RAG
 description: RAG 的演化过程与伪代码实现
 date: '2026-10-24'
 category: 学习随笔
@@ -14,13 +14,13 @@ featured: true
 sample: false
 ---
 
-## 简介
+## 1. RAG 简介
 
-RAG：**Retrieval-Augmented-Genaration**（检索增强生成）
+#### RAG：**Retrieval-Augmented-Generation**（检索增强生成）
 
-2020年 [RAG 概念的首次提出](https://dl.acm.org/doi/abs/10.5555/3495724.3496517)还是为了提升文本生成模型中知识密集型任务的答案准确率
+2020年[RAG 概念的首次提出](https://dl.acm.org/doi/abs/10.5555/3495724.3496517)还是为了提升文本生成模型中知识密集型任务的答案准确率，侧重**检索器**与**生成器**的优化。
 
-当时工作流程
+**RAG-Sequence** 的简明示例，原始论文还提出了 RAG-Token，允许不同的检索文档影响不同位置的生成 Token。
 
 ``````mermaid
 flowchart TD
@@ -45,9 +45,19 @@ flowchart TD
 
 而2026年，随着 LLM 与 Agent 快速发展，RAG 更多被视为一种**大模型应用系统架构**，通过**外部知识库**、检索与排序、上下文构造，让已有的 LLM 使用外部知识完成任务，而不需要重新训练 LLM。
 
-在 [CE-Engineering](./Agent_loop 简介与最小伪代码演化.md) 中 RAG 负责在模型开始工作前准备好与 goal 相关的外部资料而非历史上下文
+在 [CE-Engineering](<./Agent_loop 简介与最小伪代码演化.md>) 中 RAG 负责在模型开始工作前准备好与 goal 相关的外部资料而非历史上下文
 
-## 经典技术架构
+#### 原始RAG与现代RAG对比
+
+| 维度     | 2020 年原始 RAG          | 现代常见工程 RAG       |
+| -------- | ------------------------ | ---------------------- |
+| 主要定位 | 可训练的检索增强生成模型 | 应用系统架构           |
+| 检索器   | DPR                      | Embedding、BM25 等     |
+| 生成器   | BART-large               | 各类 LLM               |
+| 训练     | 联合微调部分组件         | 通常无须微调 LLM       |
+| 知识结合 | 潜在文档概率边缘化       | 将检索内容构造成上下文 |
+
+## 经典 RAG 技术架构
 
 一个典型的 RAG 系统主要包括两个阶段：知识库构建（离线阶段）和检索增强生成阶段
 
@@ -79,6 +89,11 @@ flowchart TD
   
 ``````
 
+注意：
+
+- Embedding-向量检索，关键词检索无需 Embedding
+- 校验为生成后的独立检查步骤
+
 ### 伪代码示例
 
 #### 构建向量知识库（离线阶段）
@@ -92,8 +107,8 @@ def build_knowledge_base(documents):
 		
 		chunks = split_text(
 			text,
-			chunk_size = 500,
-			overlap = 100
+			chunk_size = 500, 
+			overlap = 100 # 为什么需要overlap
 		) # 文本切分
 		
 		for chunk in chunks:
@@ -167,7 +182,7 @@ def advanced_retrieve(query):
         top_k=10
     )
 
-    # 融合两类检索结果
+    # 融合两类检索结果RRF
     candidates = reciprocal_rank_fusion(
         semantic_docs,
         keyword_docs
@@ -190,7 +205,7 @@ def advanced_retrieve(query):
 
 这样能结合两种检索方式的优势：
 
-| 检索方式       | 擅长解决的问题           |
+| 检索技术       | 擅长解决的问题           |
 | -------------- | ------------------------ |
 | Embedding 检索 | 语义相近但用词不同       |
 | BM25 检索      | 精确术语、缩写、关键词   |
@@ -198,7 +213,7 @@ def advanced_retrieve(query):
 
 另外 `THRESHOLD` 需要结合具体的重排序模型进行校准。
 
-#### Agentic Agent
+#### Agentic RAG
 
 在 Agent 之中 RAG 的体现方式
 
@@ -262,7 +277,9 @@ RAG 成为 Agent 可选择调用的 tools 的一部分，即可实现动态调�
 | Advanced RAG | 混合检索 + 重排序 | 固定程序   | 高质量知识检索             |
 | Agentic RAG  | 动态多轮检索      | Agent 决策 | 复杂分析、多跳推理、长任务 |
 
-## **应用场景**
+Basic、Advanced、Agentic RAG 的差异主要体现在**检索优化程度**与**控制方式**，而非三种相互独立的技术。Agentic RAG 可以复用 Advanced RAG 中的检索能力。
+
+## 经典**应用场景**
 
 目前，RAG 广泛应用于以下场景
 
@@ -286,9 +303,11 @@ RAG 成为 Agent 可选择调用的 tools 的一部分，即可实现动态调�
 
 从历史交互、任务经验或已有决策中检索相关信息，使智能体在跨会话执行任务时能够利用过去的上下文。
 
-## RAG 与 Agent_loop 之间的关系
+## RAG 与 Agent_loop 的关系
 
 RAG 在 Harness 之中一般是负责知识库检索部分的工作，即提前帮 LLM 准备好与 goal 相关的资料与知识
 
-[Agent_loop 回顾](./Agent_loop 简介与最小伪代码演化.md)
+[Agent_loop 回顾](<./Agent_loop 简介与最小伪代码演化.md>)
+
+## RAG 的技术局限与效果评估
 
