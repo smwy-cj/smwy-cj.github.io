@@ -9,7 +9,18 @@ async function render() {
   error.value = false
   try {
     const { default: mermaid } = await import('mermaid')
-    mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'neutral', suppressErrorRendering: true })
+    await document.fonts.ready
+    mermaid.initialize({
+      startOnLoad: false, securityLevel: 'strict', theme: 'base', suppressErrorRendering: true,
+      // SVG labels avoid foreignObject sizing and inherited article typography.
+      htmlLabels: false,
+      flowchart: { htmlLabels: false, nodeSpacing: 28, rankSpacing: 40, useMaxWidth: true },
+      themeVariables: {
+        fontFamily: 'Arial, "Microsoft YaHei", sans-serif', fontSize: '15px',
+        primaryColor: '#eef0e7', primaryTextColor: '#303b32', primaryBorderColor: '#89947d',
+        lineColor: '#78836f', secondaryColor: '#f7f5ef', tertiaryColor: '#e7ebdf',
+      },
+    })
     const result = await mermaid.render(`diagram-${crypto.randomUUID()}`, props.source)
     if (current === revision) svg.value = result.svg
   } catch {

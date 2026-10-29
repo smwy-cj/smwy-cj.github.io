@@ -45,8 +45,9 @@
 .motion-off{scroll-behavior:auto}.motion-off *, .motion-off *:before, .motion-off *:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.motion-off [data-reveal]{opacity:1!important;translate:none!important}.motion-off .mountain,.motion-off .landscape-sun,.motion-off .landscape-boat,.motion-off .tilt-card{transform:none!important}.motion-off .cursor-aura,.motion-off .click-ripple{display:none}
 @media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}[data-reveal]{opacity:1!important;translate:none!important}.mountain,.landscape-sun,.landscape-boat,.tilt-card{transform:none!important}.cursor-aura,.click-ripple{display:none}}
 /* Diagrams, formulas and full-screen image viewing. */
-.mermaid-diagram { margin: 2rem 0; padding: 1rem; border: 1px solid currentColor; border-radius: 12px; overflow-x: auto; background: #f7f5ef; color: #303b32; }
-.mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: auto; }
+.mermaid-diagram { margin: 2rem 0; padding: 1.25rem; border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; background: var(--paper); color: var(--text); }
+.mermaid-diagram > div > svg { display: block; max-width: 100%; height: auto; margin: auto; }
+.mermaid-diagram .nodeLabel p { margin: 0; }
 .mermaid-diagram summary { cursor: pointer; font-size: .85rem; margin-top: 1rem; }
 .mermaid-diagram pre { white-space: pre; overflow-x: auto; }
 .prose mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding: .5rem 0; max-width: 100%; }
