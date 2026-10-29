@@ -45,7 +45,7 @@ flowchart TD
 
 而2026年，随着 LLM 与 Agent 快速发展，RAG 更多被视为一种**大模型应用系统架构**，通过**外部知识库**、检索与排序、上下文构造，让已有的 LLM 使用外部知识完成任务，而不需要重新训练 LLM。
 
-在 [CE-Engineering](<./Agent_loop 简介与最小伪代码演化.md>) 中 RAG 负责在模型开始工作前准备好与 goal 相关的外部资料而非历史上下文
+在 CE-Engineering 中 RAG 负责在模型开始工作前准备好与 goal 相关的外部资料而非历史上下文
 
 #### 原始RAG与现代RAG对比
 
@@ -307,7 +307,7 @@ Basic、Advanced、Agentic RAG 的差异主要体现在**检索优化程度**与
 
 RAG 在 Harness 之中一般是负责知识库检索部分的工作，即提前帮 LLM 准备好与 goal 相关的资料与知识
 
-[Agent_loop 回顾](<./Agent_loop 简介与最小伪代码演化.md>)
+Agent_loop 回顾
 
 ## RAG 的技术局限与效果评估
 
