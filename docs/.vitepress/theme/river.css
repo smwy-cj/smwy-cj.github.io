@@ -3,7 +3,7 @@
 .site-shell { background-image: none; }
 .site-shell:not(.experience-home) { background: var(--paper); }
 .route-content { animation: none; }
-.site-header { height: 76px; box-shadow: none; }
+.site-header { height: 66px; box-shadow: none; }
 .header-inner { width: calc(100% - 9%); max-width: 1600px; gap: 24px; }
 .brand { min-width: 0; gap: 17px; }
 .brand-symbol { border: 0; width: 44px; height: 36px; border-radius: 0; }
@@ -106,8 +106,8 @@
 .article-header > .eyebrow { font-size: 11px; }
 .article-tags > span { font-size: 11px; }
 .reading-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 770px) minmax(0, 1fr); gap: 32px; padding-top: 36px; }
-.reading-body { grid-column: 2; min-width: 0; }
-.article-toc { grid-column: 3; width: min(230px, 100%); justify-self: end; min-width: 0; }
+.reading-body { grid-column: 2; grid-row: 1; min-width: 0; }
+.article-toc { grid-column: 1; grid-row: 1; width: min(230px, 100%); justify-self: start; min-width: 0; }
 .prose { font-size: 17px; line-height: 1.95; overflow-wrap: break-word; }
 .prose h2 { font-size: 28px; line-height: 1.6; margin-top: 2.1em; }
 .prose h3 { font-size: 22px; line-height: 1.7; }
