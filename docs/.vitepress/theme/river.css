@@ -112,6 +112,16 @@
 .prose pre { font-size: 13px; line-height: 1.8; border-radius: 4px; }
 .prose th, .prose td { font-size: 14px; line-height: 1.7; }
 .prose blockquote { border-left-width: 2px; padding: 4px 24px; }
+.toc-inner {
+  /* Keep the full outline reachable below its sticky top offset. */
+  max-height: calc(100vh - 150px);
+  max-height: calc(100dvh - 150px);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  padding-right: 8px;
+}
+.toc-inner > * { flex-shrink: 0; }
 .toc-inner > a { font-size: 13px; line-height: 1.8; }
 .toc-inner > .toc-sub { font-size: 12px; }
 .sample-callout > p { font-size: 12px; line-height: 1.8; }
@@ -170,7 +180,8 @@ h1[tabindex='-1']:focus { outline: none; }
   .article-toc { display: none; }
   .mobile-article-toc { display: block; margin-bottom: 24px; border-block: 1px solid var(--line); padding: 15px 0; font-size: 14px; }
   .mobile-article-toc summary { cursor: pointer; font-weight: 500; min-height: 30px; }
-  .mobile-article-toc nav { display: flex; flex-direction: column; gap: 14px; padding: 20px 0 8px; }
+  .mobile-article-toc nav { display: flex; flex-direction: column; gap: 14px; padding: 20px 0 8px; max-height: 60dvh; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; }
+  .mobile-article-toc nav > a { flex-shrink: 0; }
   .mobile-article-toc .toc-sub { padding-left: 16px; color: var(--muted); }
   .article-header h1 { font-size: 34px; }
   .prose { font-size: 17px; }
