@@ -6,10 +6,16 @@ const expanded = ref(new Set<string>())
 const active = ref('')
 let frame = 0
 let mounted = false
+let selectedHash = ''
 function expand(slug: string) { expanded.value.add(slug) }
 function toggle(slug: string) {
   if (expanded.value.has(slug)) expanded.value.delete(slug)
   else expand(slug)
+}
+function select(slug: string) {
+  // The ensuing anchor navigation must not reopen a branch just collapsed by the user.
+  selectedHash = slug
+  toggle(slug)
 }
 function flatten(headings: OutlineHeading[]): OutlineHeading[] {
   return headings.flatMap(heading => [heading, ...flatten(heading.children)])
@@ -17,6 +23,9 @@ function flatten(headings: OutlineHeading[]): OutlineHeading[] {
 function revealHash() {
   let slug: string
   try { slug = decodeURIComponent(location.hash.slice(1)) } catch { return }
+  const isSelection = selectedHash === slug
+  selectedHash = ''
+  if (isSelection) { active.value = slug; return }
   function reveal(headings: OutlineHeading[]): boolean {
     for (const heading of headings) {
       if (heading.slug === slug) { expand(heading.slug); return true }
@@ -39,6 +48,7 @@ function updateActive() {
 function onScroll() { if (!frame) frame = requestAnimationFrame(updateActive) }
 watch(() => props.pageKey, async () => {
   expanded.value = new Set()
+  selectedHash = ''
   active.value = ''
   await nextTick()
   if (mounted) { updateActive(); revealHash() }
@@ -60,6 +70,6 @@ onUnmounted(() => {
 
 <template>
   <nav class="article-outline" aria-label="本文目录">
-    <OutlineBranch :headings="headings" :expanded="expanded" :active="active" @toggle="toggle" @expand="expand" />
+    <OutlineBranch :headings="headings" :expanded="expanded" :active="active" @toggle="toggle" @select="select" />
   </nav>
 </template>

@@ -284,17 +284,19 @@ h1[tabindex='-1']:focus { outline: none; }
 .outline-toggle { display: flex; align-items: center; justify-content: center; padding: 0; color: var(--muted); opacity: 0; transition: opacity 160ms ease; border-radius: 3px; }
 .outline-row:hover > .outline-toggle, .outline-row:focus-within > .outline-toggle { opacity: 1; }
 .outline-toggle:hover { background: var(--accent-soft); color: var(--accent); }
-.outline-toggle svg { transition: transform 160ms ease; }
+.outline-toggle svg { transition: transform 200ms cubic-bezier(.2, 0, 0, 1); }
 .outline-toggle[aria-expanded='true'] svg { transform: rotate(90deg); }
-.outline-reveal-enter-active, .outline-reveal-leave-active { transition: opacity 160ms ease, transform 160ms ease; }
-.outline-reveal-enter-from, .outline-reveal-leave-to { opacity: 0; transform: translateY(-4px); }
+.outline-children { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 200ms cubic-bezier(.2, 0, 0, 1), opacity 180ms ease; }
+.outline-children.is-expanded { grid-template-rows: 1fr; opacity: 1; }
+.outline-children-inner { min-height: 0; overflow: hidden; }
+.article-outline { overflow-anchor: none; }
 .motion-off .outline-toggle, .motion-off .outline-toggle svg,
-.motion-off .outline-reveal-enter-active, .motion-off .outline-reveal-leave-active { transition: none; }
+.motion-off .outline-children { transition: none; }
 @media (hover: none), (pointer: coarse) {
   .outline-toggle { opacity: 1; width: 32px; flex-basis: 32px; height: 44px; }
   .outline-spacer { width: 32px; flex-basis: 32px; }
   .outline-row > a { padding-block: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .outline-toggle, .outline-toggle svg, .outline-reveal-enter-active, .outline-reveal-leave-active { transition: none; }
+  .outline-toggle, .outline-toggle svg, .outline-children { transition: none; }
 }
