@@ -272,3 +272,29 @@ h1[tabindex='-1']:focus { outline: none; }
   .mobile-article-toc nav > a { flex-shrink: 0; }
   .mobile-article-toc .toc-sub { padding-left: 16px; color: var(--muted); }
 }
+
+/* Collapsible article outline; reserve arrow space to keep labels stationary. */
+.article-outline .outline-list { list-style: none; margin: 0; padding: 0; }
+.article-outline .outline-list .outline-list { padding-left: 16px; }
+.outline-row { display: flex; align-items: flex-start; gap: 3px; margin-block: 6px; border-radius: 4px; }
+.outline-row > a { flex: 1; min-width: 0; padding: 5px 0; font-size: 13px; line-height: 1.8; color: var(--muted); overflow-wrap: anywhere; }
+.outline-row > a:hover, .outline-row > a[aria-current='location'] { color: var(--accent); }
+.outline-row > a[aria-current='location'] { font-weight: 600; }
+.outline-toggle, .outline-spacer { flex: 0 0 22px; width: 22px; height: 32px; }
+.outline-toggle { display: flex; align-items: center; justify-content: center; padding: 0; color: var(--muted); opacity: 0; transition: opacity 160ms ease; border-radius: 3px; }
+.outline-row:hover > .outline-toggle, .outline-row:focus-within > .outline-toggle { opacity: 1; }
+.outline-toggle:hover { background: var(--accent-soft); color: var(--accent); }
+.outline-toggle svg { transition: transform 160ms ease; }
+.outline-toggle[aria-expanded='true'] svg { transform: rotate(90deg); }
+.outline-reveal-enter-active, .outline-reveal-leave-active { transition: opacity 160ms ease, transform 160ms ease; }
+.outline-reveal-enter-from, .outline-reveal-leave-to { opacity: 0; transform: translateY(-4px); }
+.motion-off .outline-toggle, .motion-off .outline-toggle svg,
+.motion-off .outline-reveal-enter-active, .motion-off .outline-reveal-leave-active { transition: none; }
+@media (hover: none), (pointer: coarse) {
+  .outline-toggle { opacity: 1; width: 32px; flex-basis: 32px; height: 44px; }
+  .outline-spacer { width: 32px; flex-basis: 32px; }
+  .outline-row > a { padding-block: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .outline-toggle, .outline-toggle svg, .outline-reveal-enter-active, .outline-reveal-leave-active { transition: none; }
+}
