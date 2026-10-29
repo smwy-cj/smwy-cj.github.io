@@ -14,6 +14,7 @@ export default defineConfig({
     transformItems: items => items.filter(item => item.url !== '404.html')
   },
   head: [
+    ['script', {}, `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('shanshui-arrived')&&localStorage.getItem('shanshui-motion')!=='off'&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('river-boot');setTimeout(function(){document.documentElement.classList.remove('river-boot')},5500)}}catch(e){}})()`],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#f7f5ef' }],
     ['meta', { property: 'og:type', content: 'website' }],

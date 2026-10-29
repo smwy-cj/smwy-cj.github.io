@@ -32,7 +32,7 @@ export function useExperience() {
     let pointerTarget: Element | null = null
     const resetTilt = () => { tilted?.style.removeProperty('--tilt-x'); tilted?.style.removeProperty('--tilt-y'); tilted = null }
     const pointer = (event: PointerEvent) => {
-      if (!active() || !fine.matches || event.pointerType === 'touch') return
+      if (!active() || !fine.matches || event.pointerType === 'touch' || !document.querySelector('.experience-home')) return
       pointerX = event.clientX; pointerY = event.clientY; pointerTarget = event.target instanceof Element ? event.target : null
       if (pointerFrame) return
       pointerFrame = requestAnimationFrame(() => {
@@ -69,7 +69,7 @@ export function useExperience() {
           catch { announce('暂时无法复制，请手动选取代码') }
         }
       }
-      if (!active() || event.detail === 0 || event.target.closest('dialog')) return
+      if (!active() || event.detail === 0 || event.target.closest('dialog') || !event.target.closest('.experience-home a, .experience-home button')) return
       const id = sequence++
       ripples.value = [...ripples.value.slice(-5), { id, x: event.clientX, y: event.clientY }]
     }

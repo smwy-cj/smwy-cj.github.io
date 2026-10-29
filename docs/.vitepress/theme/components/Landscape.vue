@@ -1,34 +1,168 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { withBase } from 'vitepress'
+import { createRiverRenderer } from '../riverRenderer'
+import { riverX, riverY, scenePoint, sceneCover } from '../riverGeometry'
+const props = defineProps<{ motion: boolean }>()
+const surface = ref<HTMLCanvasElement>(), particles = ref<HTMLCanvasElement>(), boat = ref<HTMLImageElement>()
+const intro = ref(false)
+let cleanup = () => {}, skip = () => {}, refresh = () => {}
+watch(() => props.motion, () => { if (!props.motion) skip(); refresh() })
+onMounted(() => {
+  const root = document.documentElement
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+  const fine = matchMedia('(pointer: fine)')
+  const canvas = surface.value!, dust = particles.value!, ctx = dust.getContext('2d')
+  const source = new Image()
+  let renderer: ReturnType<typeof createRiverRenderer> = null
+  let frame = 0, width = document.documentElement.clientWidth, height = innerHeight, disposed = false
+  let start = 0, elapsed = 0, last = 0, time = 0, px = 0, py = 0, targetX = 0, targetY = 0
+  let journey = 0, journeyTarget = 0, journeyLength = 1
+  const home = canvas.closest<HTMLElement>('.river-home')
+  let initialized = false
+  intro.value = props.motion && !reduced.matches
+  if (intro.value) {
+    root.classList.remove('river-ui-ready')
+    root.classList.add('river-boot')
+  }
+  try { sessionStorage.setItem('shanshui-arrived', '1') } catch { /* Session memory is optional. */ }
+  const seeds = Array.from({ length: innerWidth < 700 ? 65 : 140 }, (_, i) => ({
+    x: ((i * 73.13) % 137) / 137, y: ((i * 31.17) % 97) / 97,
+    speed: .3 + ((i * 19) % 29) / 40, size: .5 + (i % 4) * .35
+  }))
+  const finishIntro = () => {
+    intro.value = false
+    root.classList.remove('river-boot')
+    root.classList.add('river-ui-ready')
+    refresh()
+  }
+  skip = finishIntro
+  const moving = () => props.motion && !reduced.matches && !document.hidden
+  const scroll = () => {
+    journeyTarget = Math.max(0, Math.min(1, scrollY / journeyLength))
+    refresh()
+  }
+  const measureJourney = () => {
+    journeyLength = Math.max(1, (home?.offsetHeight || height) - height)
+    scroll()
+  }
+  function size() {
+    width = document.documentElement.clientWidth; height = innerHeight
+    const ratio = Math.min(devicePixelRatio, width < 700 ? 1.25 : 1.5)
+    canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio)
+    dust.width = Math.round(width * ratio); dust.height = Math.round(height * ratio)
+    ctx?.setTransform(ratio, 0, 0, ratio, 0, 0)
+    measureJourney()
+    refresh()
+  }
+  function draw(now: number) {
+    frame = 0
+    if (disposed || document.hidden) return
+    const delta = last ? Math.min((now - last) / 1000, .06) : 0
+    last = now
+    if (moving()) time += delta
+    // Native scrolling remains in charge; the boat gently catches up to its position.
+    journey = moving() ? journey + (journeyTarget - journey) * (1 - Math.exp(-delta * 4.5)) : journeyTarget
+    if (intro.value && initialized) {
+      if (!start) start = now
+      elapsed = (now - start) / 1000
+      if (elapsed > 1.9) root.classList.add('river-ui-ready')
+      if (elapsed >= 3.4) finishIntro()
+    }
+    px += (targetX - px) * .035; py += (targetY - py) * .035
+    const reveal = intro.value ? Math.min(1, Math.max(0, (elapsed - .12) / 2.7)) : 1
+    renderer?.draw(time, reveal, moving(), px, py, width, height)
+    if (boat.value) {
+      const advance = intro.value ? Math.max(0, Math.min(1, (elapsed - 1.1) / 2)) : 1
+      const cover = sceneCover(width, height)
+      const anchor = .5 - .195 * cover.x
+      const destination = Math.min(.5 + .34 * cover.x, riverX(.5 - .32 * cover.y))
+      const sailing = props.motion && !reduced.matches ? journey : 0
+      const x = anchor + (destination - anchor) * sailing - .035 + advance * .035 + (moving() ? Math.sin(time * .16) * .002 : 0)
+      const point = scenePoint(x, riverY(x) + .012, width, height)
+      boat.value.style.left = point.x + 'px'
+      boat.value.style.top = (point.y + (moving() ? Math.sin(time * 1.4) * 1.8 : 0)) + 'px'
+      boat.value.style.opacity = String(intro.value ? Math.max(0, Math.min(1, elapsed - 1.4)) : 1)
+      boat.value.style.transform = 'translate(-50%, -90%) scale(' + (1 - sailing * .23) + ') rotate(' + (moving() ? Math.sin(time * 1.2) * 1.3 : 0) + 'deg)'
+    }
+    if (ctx) {
+      ctx.clearRect(0, 0, width, height)
+      if (moving()) for (const seed of seeds) {
+        let x: number, y: number, alpha: number
+        if (intro.value) {
+          const travel = Math.max(0, elapsed - .15) / 2.9
+          x = width * (seed.x * travel * 1.5 + Math.sin(time + seed.y * 8) * .015)
+          y = height * (1 - seed.y * travel * 1.55)
+          alpha = Math.min(1, elapsed * 2) * Math.max(0, 1 - (elapsed - 2.2) / 1.1) * .65
+        } else {
+          const along = (seed.x + time * .008 * seed.speed) % 1
+          const point = scenePoint(along, riverY(along) + (seed.y - .5) * .12, width, height)
+          x = point.x; y = point.y
+          alpha = (.16 + Math.sin(time * .6 + seed.x * 20) * .12) * (1 - along * .6)
+        }
+        ctx.fillStyle = 'rgba(239,219,177,' + alpha + ')'
+        ctx.beginPath(); ctx.arc(x, y, seed.size, 0, Math.PI * 2); ctx.fill()
+      }
+    }
+    if ((moving() || intro.value) && !frame) frame = requestAnimationFrame(draw)
+  }
+  refresh = () => { if (!frame && !disposed && !document.hidden) frame = requestAnimationFrame(draw) }
+  const visibility = () => { last = 0; if (document.hidden) { cancelAnimationFrame(frame); frame = 0 } else refresh() }
+  const pointer = (event: PointerEvent) => {
+    if (fine.matches && props.motion) { targetX = event.clientX / width - .5; targetY = event.clientY / height - .5 }
+  }
+  const exit = () => { targetX = 0; targetY = 0 }
+  const intent = () => { if (intro.value) finishIntro() }
+  const keyIntent = (e: KeyboardEvent) => { if (['Tab','Escape','Enter',' ','PageDown','ArrowDown'].includes(e.key)) intent() }
+  const preference = () => { if (reduced.matches) finishIntro(); refresh() }
+  const lost = (e: Event) => { e.preventDefault(); canvas.style.visibility = 'hidden'; finishIntro() }
+  source.onload = () => {
+    if (disposed) return
+    renderer = createRiverRenderer(canvas, source)
+    initialized = true
+    if (!renderer) { canvas.style.visibility = 'hidden'; finishIntro() }
+    size(); refresh()
+  }
+  source.onerror = () => { canvas.style.visibility = 'hidden'; finishIntro() }
+  source.src = withBase('/images/river-scene.png')
+  // A slow or unavailable graphics layer must never hold content behind black.
+  const safety = window.setTimeout(() => { if (!initialized) finishIntro() }, 1700)
+  size()
+  journey = journeyTarget
+  const journeyObserver = new ResizeObserver(measureJourney)
+  if (home) journeyObserver.observe(home)
+  window.addEventListener('resize', size)
+  window.addEventListener('scroll', scroll, { passive: true })
+  window.addEventListener('pointermove', pointer, { passive: true })
+  window.addEventListener('wheel', intent, { passive: true })
+  window.addEventListener('touchstart', intent, { passive: true })
+  window.addEventListener('keydown', keyIntent)
+  document.addEventListener('pointerleave', exit)
+  document.addEventListener('visibilitychange', visibility)
+  reduced.addEventListener('change', preference)
+  canvas.addEventListener('webglcontextlost', lost)
+  cleanup = () => {
+    disposed = true; cancelAnimationFrame(frame); clearTimeout(safety); renderer?.dispose()
+    journeyObserver.disconnect()
+    source.onload = null; source.onerror = null
+    root.classList.remove('river-boot', 'river-ui-ready')
+    window.removeEventListener('resize', size); window.removeEventListener('pointermove', pointer)
+    window.removeEventListener('scroll', scroll)
+    window.removeEventListener('wheel', intent); window.removeEventListener('touchstart', intent)
+    window.removeEventListener('keydown', keyIntent); document.removeEventListener('pointerleave', exit)
+    document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', preference)
+    canvas.removeEventListener('webglcontextlost', lost)
+  }
+})
+onBeforeUnmount(() => cleanup())
+</script>
+
 <template>
-  <div class="landscape" aria-hidden="true">
-    <svg viewBox="0 0 900 650" fill="none" class="landscape-svg">
-      <defs>
-        <linearGradient id="ink-far" x1="470" y1="130" x2="470" y2="530" gradientUnits="userSpaceOnUse"><stop stop-color="#9ba49a" stop-opacity=".5"/><stop offset="1" stop-color="#c3c9bd" stop-opacity=".04"/></linearGradient>
-        <linearGradient id="ink-mid" x1="500" y1="180" x2="500" y2="580" gradientUnits="userSpaceOnUse"><stop stop-color="#747f74" stop-opacity=".69"/><stop offset=".7" stop-color="#a2ad9e" stop-opacity=".27"/><stop offset="1" stop-color="#d7d9ca" stop-opacity="0"/></linearGradient>
-        <linearGradient id="ink-near" x1="590" y1="260" x2="590" y2="650" gradientUnits="userSpaceOnUse"><stop stop-color="#4e5c50" stop-opacity=".84"/><stop offset="1" stop-color="#87937d" stop-opacity=".16"/></linearGradient>
-        <linearGradient id="ink-left" x1="150" y1="370" x2="230" y2="620" gradientUnits="userSpaceOnUse"><stop stop-color="#6e7b6c" stop-opacity=".55"/><stop offset="1" stop-color="#b3bca8" stop-opacity="0"/></linearGradient>
-        <radialGradient id="sun-wash"><stop stop-color="#d3cfb6" stop-opacity=".75"/><stop offset=".9" stop-color="#d3cfb6" stop-opacity=".25"/><stop offset="1" stop-color="#d3cfb6" stop-opacity="0"/></radialGradient>
-        <filter id="paper-ink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".025 .13" numOctaves="3" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>
-      </defs>
-      <circle cx="644" cy="144" r="57" fill="url(#sun-wash)" class="landscape-sun"/>
-      <g class="mountain mountain-far" filter="url(#paper-ink)">
-        <path d="M92 437 134 390 163 359 187 368 214 313 234 307 255 272 267 276 290 217 309 244 321 230 346 286 368 297 390 337 414 317 435 355 458 306 485 282 499 248 524 276 548 267 563 314 590 330 615 380 660 372 712 428 783 455 856 535H80Z" fill="url(#ink-far)"/>
-        <path d="m430 409 43-80 21-10 33-71 18 9 36-87 15 5 24-55 17 30 16-9 32 74 21 11 28 62 31 12 23 64 31 28 63 91 50 57H420Z" fill="url(#ink-far)" opacity=".66"/>
-      </g>
-      <g class="mountain mountain-mid" filter="url(#paper-ink)">
-        <path d="m261 559 24-100 25-27 31-85 23-7 30-78 16 7 24-56 16 8 21 72 16 8 28 83 25 17 32 68 43 24 30 77 35 34-35 66H260Z" fill="url(#ink-mid)"/>
-        <path d="m453 542 38-90 28-20 35-68 26-11 27-74 18 7 26-72 17 20 13-8 28 82 20 10 29 66 25 17 22 66 31 28 35 112 53 51H440Z" fill="url(#ink-mid)"/>
-        <g stroke="#5b6a5b" stroke-width="1" opacity=".22"><path d="m434 234-10 92-37 65-9 60m56-197 8 89 25 62 2 51m162-211-19 83-37 66-9 53m65-123 16 55 37 57 16 71m-284-70-16 31-4 45m207-70-20 53-8 39"/></g>
-      </g>
-      <g class="mountain mountain-front" filter="url(#paper-ink)">
-        <path d="m-20 575 44-30 24-48 26-6 27-42 18 9 23-56 18 16 27 57 28 13 32 47 26 13 31 53 51 42-12 36H-20Z" fill="url(#ink-left)"/>
-        <path d="m555 650 40-58 25-63 22-5 30-74 18-5 25-78 17 9 23-57 19 39 18-6 31 73 23 12 26 65 28 16 29 84 42 103Z" fill="url(#ink-near)"/>
-        <g stroke="#415042" stroke-width="1.2" opacity=".3"><path d="m755 344-14 93-37 54-17 61m69-167 18 59 29 39 7 59m-102-62-12 43-26 35m121-102 21 52 2 43"/></g>
-      </g>
-      <g class="landscape-water" stroke="#7c8977" stroke-width=".7" opacity=".23"><path d="M126 548h205m-163 17h254m-118 18h192m-249 20h314m-95-63h105m-195 79h196m-326-27h87m327-49h59"/></g>
-      <g class="landscape-boat" stroke="#65715f" stroke-linecap="round"><path d="M409 526q18 9 38 0l-6 7h-25Z" fill="#65715f" stroke-width=".8"/><path d="m433 526-1-16m-6 15 6-8 5 9m-2-14 11 21" stroke-width="1.3"/><circle cx="432" cy="508" r="2" fill="#65715f"/></g>
-      <g class="landscape-birds" stroke="#687463" stroke-width="1.3" stroke-linecap="round" opacity=".65"><path d="m392 163 8-3 6 4m22-25 6-2 4 3m-21 40 5-1 4 2"/></g>
-      <g class="landscape-pine" stroke="#52614f" stroke-linecap="round" opacity=".72"><path d="m766 447 5-67m-1 25-16-14m17 3 17-18m-16 10-6-18m8 54 19-14" stroke-width="2"/><path d="m746 391 12-5 12 6m-10-23 7-4 7 5m4 7 12-5 10 4m-20 35 13-7 13 5" stroke-width="4"/></g>
-    </svg>
-    <span class="landscape-caption">一山一水，皆是序章</span>
+  <div class="river-scene" aria-hidden="true">
+    <img class="river-fallback" :src="withBase('/images/river-scene.png')" alt="" fetchpriority="high" />
+    <canvas ref="surface" class="river-surface"></canvas>
+    <canvas ref="particles" class="river-particles"></canvas>
+    <img ref="boat" class="river-boat" :src="withBase('/images/river-boat.png')" alt="" />
   </div>
+  <button v-if="intro" class="intro-skip" @click="skip">跳过开场 <span aria-hidden="true">↗</span></button>
 </template>
