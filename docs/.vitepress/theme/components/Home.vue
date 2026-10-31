@@ -16,10 +16,6 @@ const articles = computed(() => data.filter(p => p.layout === 'article').slice(0
       <div class="river-identity home-ui">
         <h1>{{ profile.name }}</h1>
         <p>记录技术、项目与一路所想。</p>
-        <div class="river-actions">
-          <a class="river-button" :href="withBase('/projects/')">浏览项目<Icon name="arrow" :size="21" /></a>
-          <a class="river-text-link" :href="withBase('/journal/')">阅读笔记<Icon name="arrow" :size="19" /></a>
-        </div>
       </div>
       <div class="river-destinations home-ui">
         <span class="river-label">沿途所记</span>

@@ -34,14 +34,8 @@
 .river-identity { position: absolute; left: 8.2%; top: 18.5%; color: var(--river-white); }
 .river-identity h1 { font-family: var(--serif); font-weight: 500; font-size: clamp(48px, 4.6vw, 68px); line-height: 1.3; letter-spacing: .045em; }
 .river-identity > p { font-family: var(--serif); font-size: clamp(15px, 1.25vw, 18px); letter-spacing: .12em; line-height: 1.8; margin-top: 20px; }
-.river-actions { display: flex; align-items: center; gap: 33px; margin-top: 30px; }
-.river-button { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-width: 182px; padding: 15px 24px; min-height: 52px; background: #f6f3e9; color: #34443a; border-radius: 3px; font-family: var(--serif); font-size: 17px; letter-spacing: 2px; transition: background .2s, transform .2s; }
-.river-button:hover { background: #fffdf5; transform: translateY(-2px); }
-.river-button:active { transform: translateY(0) scale(.98); }
-.river-text-link { display: inline-flex; align-items: center; gap: 15px; font-family: var(--serif); font-size: 17px; letter-spacing: 2px; border-bottom: 1px solid #ede9dd7d; padding: 10px 0; transition: border-color .2s; }
-.river-text-link:hover { border-color: #fff; }
-.river-text-link svg, .river-destinations svg, .bank-more svg, .bank-entry > svg { transition: transform .25s; }
-.river-text-link:hover svg, .river-destinations a:hover svg, .bank-more:hover svg { transform: translateX(4px); }
+.river-destinations svg, .bank-more svg, .bank-entry > svg { transition: transform .25s; }
+.river-destinations a:hover svg, .bank-more:hover svg { transform: translateX(4px); }
 .river-destinations { position: absolute; right: 9.5%; top: 64%; width: 250px; color: var(--river-ink); font-family: var(--serif); }
 .river-label { display: flex; align-items: center; gap: 14px; font-size: 16px; letter-spacing: 4px; margin-bottom: 13px; }
 .river-label::before { content: ''; display: block; width: 30px; height: 1px; background: currentColor; }
@@ -66,6 +60,9 @@
 .bank-light::before { background: #f4efdfad; }
 .bank-dark { color: #f5f1e5; text-shadow: 0 2px 15px #10221cd9; }
 .bank-dark::before { background: #14282094; }
+/* Keep the project landscape visible beneath a lighter, tighter reading veil. */
+.chapter-projects .bank-copy { text-shadow: 0 1px 8px #fff9e659; }
+.chapter-projects .bank-copy::before { inset: -45px -60px; filter: blur(40px); background: #f4efdf80; }
 .motion-ready .bank-copy [data-reveal] { transition: opacity .95s ease, translate 1.05s cubic-bezier(.2,.65,.3,1); }
 .motion-ready .bank-copy [data-reveal]:not(.is-visible) { translate: 0 24px; }
 .bank-copy [data-reveal]:focus-visible { opacity: 1; translate: none; }
@@ -178,9 +175,6 @@ h1[tabindex='-1']:focus { outline: none; }
   .river-identity > p { max-width: 330px; font-size: 17px; letter-spacing: 2px; }
   .river-destinations { right: 7%; width: 210px; top: 67%; }
   .river-hero { min-height: 720px; }
-  .river-button { min-width: 157px; padding: 13px 18px; font-size: 15px; }
-  .river-text-link { font-size: 15px; }
-  .river-actions { gap: 24px; }
   .river-chapter { min-height: 105svh; padding-inline: 6%; }
   .bank-copy { width: 48%; }
   .reading-layout { display: block; }
@@ -211,9 +205,6 @@ h1[tabindex='-1']:focus { outline: none; }
   .river-identity { left: 7%; top: 17%; right: 7%; }
   .river-identity h1 { font-size: clamp(36px, 10vw, 44px); letter-spacing: .04em; }
   .river-identity > p { font-size: 14px; letter-spacing: .12em; margin-top: 18px; }
-  .river-actions { gap: 22px; margin-top: 24px; }
-  .river-button { min-width: 142px; font-size: 14px; gap: 17px; min-height: 48px; padding: 12px 17px; }
-  .river-text-link { font-size: 14px; gap: 10px; }
   .river-destinations { top: auto; bottom: 11%; right: 7%; width: 214px; background: #f5f0e3e8; padding: 19px 20px; backdrop-filter: blur(12px); }
   .river-label { font-size: 12px; letter-spacing: 3px; gap: 12px; margin-bottom: 5px; }
   .river-label::before { width: 22px; }
@@ -228,6 +219,7 @@ h1[tabindex='-1']:focus { outline: none; }
   .bank-copy::before { inset: -75px -65px; border-radius: 18%; filter: blur(45px); }
   .bank-light::before { background: #f4efdfd4; }
   .bank-dark::before { background: #142820cf; }
+  .chapter-projects .bank-copy::before { inset: -60px -50px; filter: blur(36px); background: #f4efdfa6; }
   .bank-copy h2 { font-size: 26px; }
   .bank-entry h3 { font-size: 20px; }
   .bank-description { font-size: 14px; }
