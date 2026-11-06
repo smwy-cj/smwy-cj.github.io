@@ -19,6 +19,7 @@ const t = computed(() => labels[locale.value])
 const path = computed(() => routes[locale.value])
 const entry = computed(() => findEntry('/' + page.value.relativePath.replace(/\.md$/, '.html')))
 const progress = ref(0)
+const scrolled = ref(false)
 const nav = ref<HTMLElement>()
 const indicator = ref<{ x: number; width: number }>()
 let navObserver: ResizeObserver | undefined
@@ -49,6 +50,7 @@ function languageUrl(target: Locale) {
   return withBase(destination + (section.value === 'journal' ? query.value : ''))
 }
 function scroll() {
+  scrolled.value = window.scrollY > 12
   const max = document.documentElement.scrollHeight - window.innerHeight
   progress.value = max > 0 ? window.scrollY / max : 0
 }
@@ -83,7 +85,7 @@ onBeforeUnmount(() => {
 
 <template>
   <a class="skip-link" href="#main-content">{{ t.skip }}</a>
-  <header id="top" class="site-header">
+  <header id="top" class="site-header" :class="{ 'is-scrolled': scrolled }">
     <div class="shell header-inner">
       <a :href="withBase(path.home)" class="brand">
         <img class="brand-avatar" :src="withBase(profile.avatar)" alt="" width="28" height="28" />

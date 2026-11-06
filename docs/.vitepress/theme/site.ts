@@ -1,21 +1,21 @@
 export const profile = {
   name: '山抹微云',
   handle: 'smwy-cj',
-  siteName: '山水之间',
+  siteName: '微云集',
   avatar: '/images/plush-avatar.jpg',
   github: 'https://github.com/smwy-cj',
   email: '241830179@smail.nju.edu.cn',
   zh: {
-    tagline: '技术笔记与项目实践。',
-    description: '你好，我是山抹微云（smwy-cj）。这里收藏我的技术笔记、项目实践，以及一路走来的所思所想。',
-    interests: ['AI 与 Agent', '东玄'],
-    focus: '关注 AI、Agent 和检索增强生成，记录开发工具与个人网站的实践。'
+    tagline: '个人信息',
+    description: '你好，我是山抹微云（smwy-cj），南京大学软件工程（智能化软件）专业大三在读。这里是我的个人博客，记录我的日常学习和思考。欢迎和我联系！',
+    interests: ['LLM 与 Agent', '金融','地缘政治','东玄', '体育与音乐'],
+    focus: '我喜欢探索 LLM、Agent 和 RAG 等前沿技术革新，也喜欢研究C++、Java与JavaScript等语言与底层架构。'
   },
   en: {
     tagline: 'Technical notes and projects.',
-    description: 'Hi, I’m smwy-cj. This is where I share technical notes, projects, and things I learn along the way.',
-    interests: ['AI and agents', 'Eastern fantasy'],
-    focus: 'I explore AI, agents, and retrieval-augmented generation, and write about developer tools and building my personal site.'
+    description: 'Hi, I’m smwy-cj, a third-year undergraduate student majoring in Software Engineering (Intelligent Software) at Nanjing University. This is my personal blog. I write about my learning and thinking. Feel free to reach out!',
+    interests: ['AI and agents', 'Finance', 'Geopolitics', 'Eastern fantasy', 'Sports and music'],
+    focus: 'I enjoy exploring cutting-edge technologies like LLMs, Agents, and RAG, as well as delving into programming languages and underlying architectures such as C++, Java, and JavaScript.'
   }
 }
 
@@ -33,10 +33,10 @@ export const labels = {
     home: '主页', journal: '文章', projects: '项目', about: '关于', navigation: '主导航',
     skip: '跳到主要内容', more: '关于我的更多信息', allArticles: '查看全部文章',
     allProjects: '查看全部项目', read: '阅读文章', details: '项目简介', visit: '访问项目',
-    previous: '上一张', next: '下一张', carousel: '轮播', slide: '第 {n} 张', drag: '拖动卡片 / 左右切换',
-    end: '关于我，以及我最近在关注的事。', top: '回到顶部',
-    writingTitle: '思考，留在这里。', writingIntro: '关于开发、交互和持续学习的记录。按时间阅读，也可以从一个感兴趣的主题开始。',
-    workTitle: '构建，也分享。', workIntro: '我制作的项目和进行中的实验。', topicCount: '个标签',
+    previous: '上一张', next: '下一张', carousel: '轮播',
+    end: '山抹微云，天连衰草……关于我smwy·cj。', top: '回到顶部',
+    writingTitle: '学习笔记与思考记录。', writingIntro: '一些杂七杂八的记录……（玻璃心勿喷）',
+    workTitle: '我的项目', workIntro: '一些小破烂demo，或许会出现一些有趣的东西……', topicCount: '个标签',
     latest: '最新', tags: '按标签', all: '全部', entries: '篇文章', works: '个项目', gallery: '画廊', list: '列表',
     empty: '这里暂时没有内容。', minutes: '分钟阅读', undated: '未标日期', moreEntries: '加载更多',
     aboutTitle: '关于我', intro: '自我介绍', focus: '技术方向', interests: '个人兴趣', contact: '联系方式',
@@ -50,7 +50,7 @@ export const labels = {
     home: 'Home', journal: 'Writing', projects: 'Projects', about: 'About', navigation: 'Main navigation',
     skip: 'Skip to content', more: 'More about me', allArticles: 'View all writing',
     allProjects: 'View all projects', read: 'Read article', details: 'Project notes', visit: 'Visit project',
-    previous: 'Previous slide', next: 'Next slide', carousel: 'Carousel', slide: 'Slide {n}', drag: 'Drag to explore / Use arrows',
+    previous: 'Previous slide', next: 'Next slide', carousel: 'Carousel',
     end: 'A little more about me and what I’m exploring.', top: 'Back to top',
     writingTitle: 'Thinking, out loud.', writingIntro: 'Notes on development, interaction, and continuous learning. Read chronologically, or start with a topic.',
     workTitle: 'Build. And share.', workIntro: 'Projects I’ve built and experiments in progress.', topicCount: 'tags',

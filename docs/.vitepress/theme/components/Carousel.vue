@@ -12,13 +12,15 @@ const current = ref(count.value >= 3 ? 1 : 0)
 const mobile = ref(false)
 const rail = ref<HTMLElement>()
 const track = ref<HTMLElement>()
-const offset = ref(0)
 const dragging = ref(false)
 const visualFocus = ref(0)
 let media: MediaQueryList
 let animation: Animation | undefined
 let queued: number | undefined
 let pointer: { id: number; x: number; y: number } | undefined
+let dragWidth = 0
+let dragOffset = 0
+let dragFrame = 0
 let suppressClick = false
 let clickTimer: ReturnType<typeof setTimeout>
 const moving = computed(() => mobile.value ? count.value > 1 : count.value >= 3)
@@ -35,6 +37,7 @@ const slots = computed(() => {
 })
 const center = computed(() => moving.value ? left.value + 1 + visualFocus.value : wrap(current.value))
 const selected = computed(() => wrap(current.value))
+const progress = computed(() => count.value > 1 ? selected.value / (count.value - 1) : 0)
 const ordinal = (index: number) => String(index + 1).padStart(2, '0')
 const total = computed(() => String(count.value).padStart(2, '0'))
 function syncWidth() { stop(); mobile.value = media.matches }
@@ -43,30 +46,43 @@ function stop() {
     animation.cancel()
     animation = undefined
   }
-  offset.value = 0
+  cancelAnimationFrame(dragFrame)
+  dragFrame = 0
+  dragWidth = 0
+  dragOffset = 0
+  pointer = undefined
+  dragging.value = false
+  if (track.value) track.value.style.transform = ''
   visualFocus.value = 0
   queued = undefined
 }
 function step(direction: number) {
   if (!moving.value) return
-  if (animation) { queued = (queued ?? (current.value + visualFocus.value)) + direction; return }
+  if (animation) {
+    queued = direction
+    return
+  }
   animateStep(direction)
 }
+function stepWidth(trackElement: HTMLElement) {
+  const first = trackElement.firstElementChild
+  if (!first) return 0
+  return parseFloat(getComputedStyle(first).width) + parseFloat(getComputedStyle(trackElement).columnGap)
+}
 function animateStep(direction: number) {
-  const start = offset.value
+  const start = dragOffset
+  const width = dragWidth
   stop()
   const trackElement = track.value
-  const first = trackElement?.children[0] as HTMLElement | undefined
-  const second = trackElement?.children[1] as HTMLElement | undefined
-  if (!trackElement || !first || !second || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!trackElement || matchMedia('(prefers-reduced-motion: reduce)').matches) {
     current.value += direction
     return
   }
-  const width = second.offsetLeft - first.offsetLeft
+  const end = direction === 0 ? 0 : -direction * (width || stepWidth(trackElement))
   visualFocus.value = direction
   const run = trackElement.animate(
-    [{ transform: `translateX(${start}px)` }, { transform: `translateX(${-direction * width}px)` }],
-    { duration: 580, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }
+    [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
+    { duration: direction === 0 ? 180 : 480, easing: 'cubic-bezier(.25,.7,.35,1)', fill: 'forwards' }
   )
   animation = run
   run.onfinish = async () => {
@@ -75,20 +91,10 @@ function animateStep(direction: number) {
     visualFocus.value = 0
     await nextTick()
     if (animation !== run) return
-    const target = queued
+    const nextDirection = queued
     stop()
-    if (target !== undefined) go(target)
+    if (nextDirection !== undefined) animateStep(nextDirection)
   }
-}
-function go(target: number) {
-  if (animation) { queued = target; return }
-  if (target === current.value) return
-  const direction = Math.sign(target - current.value)
-  current.value = target - direction
-  animateStep(direction)
-}
-function choose(index: number) {
-  go(current.value + index - selected.value)
 }
 function keyboard(event: KeyboardEvent) {
   if (!moving.value || event.target !== rail.value) return
@@ -101,8 +107,7 @@ function keyboard(event: KeyboardEvent) {
   }
 }
 function down(event: PointerEvent) {
-  if (!moving.value || event.button !== 0 || !event.isPrimary) return
-  stop()
+  if (!moving.value || animation || event.button !== 0 || !event.isPrimary) return
   pointer = { id: event.pointerId, x: event.clientX, y: event.clientY }
 }
 function move(event: PointerEvent) {
@@ -111,14 +116,20 @@ function move(event: PointerEvent) {
   const y = event.clientY - pointer.y
   if (!dragging.value && Math.abs(y) > 8 && Math.abs(y) > Math.abs(x)) { pointer = undefined; return }
   if (!dragging.value && Math.abs(x) < 8) return
+  const trackElement = track.value
+  if (!trackElement) return
   if (!dragging.value) {
+    dragWidth = stepWidth(trackElement)
     dragging.value = true
     rail.value?.setPointerCapture(event.pointerId)
   }
-  const first = track.value?.children[0] as HTMLElement | undefined
-  const second = track.value?.children[1] as HTMLElement | undefined
-  const limit = first && second ? second.offsetLeft - first.offsetLeft : 0
-  offset.value = Math.max(-limit, Math.min(limit, x))
+  dragOffset = Math.max(-dragWidth, Math.min(dragWidth, x))
+  if (!dragFrame) {
+    dragFrame = requestAnimationFrame(() => {
+      trackElement.style.transform = `translateX(${dragOffset}px)`
+      dragFrame = 0
+    })
+  }
 }
 function finish(event: PointerEvent) {
   if (pointer?.id !== event.pointerId) return
@@ -128,7 +139,8 @@ function finish(event: PointerEvent) {
   suppressClick = true
   clearTimeout(clickTimer)
   clickTimer = setTimeout(() => suppressClick = false, 0)
-  step(event.type === 'pointerup' && Math.abs(offset.value) >= 45 ? (offset.value < 0 ? 1 : -1) : 0)
+  const direction = event.type === 'pointerup' && Math.abs(dragOffset) >= 45 ? Math.sign(-dragOffset) : 0
+  animateStep(direction)
 }
 function intercept(event: MouseEvent) {
   if (!suppressClick) return
@@ -150,46 +162,46 @@ onBeforeUnmount(() => {
 
 <template>
   <section class="collection" :aria-label="t[kind]" :aria-roledescription="t.carousel">
-    <div class="collection-heading" :class="{ 'has-controls': moving }">
+    <div class="collection-heading">
       <div><div class="eyebrow">{{ kind === 'journal' ? '01 / Writing' : '02 / Projects' }}</div><h2>{{ t[kind] }}</h2></div>
       <div class="collection-actions">
         <a class="inline-link" :href="withBase(routes[locale][kind])">{{ kind === 'journal' ? t.allArticles : t.allProjects }} <Icon name="diagonal" :size="12" /></a>
-        <template v-if="moving">
-          <button class="round-button previous" :aria-label="t.previous" :aria-controls="'rail-' + kind" @click="step(-1)"><Icon name="arrow" :size="16" /></button>
-          <button class="round-button" :aria-label="t.next" :aria-controls="'rail-' + kind" @click="step(1)"><Icon name="arrow" :size="16" /></button>
-        </template>
       </div>
     </div>
     <p v-if="!count" class="empty">{{ t.empty }}</p>
     <template v-else>
-      <div :id="'rail-' + kind" ref="rail" class="rail" :class="{ moving, dragging }" :tabindex="moving ? 0 : undefined" :aria-label="t[kind]"
-        @keydown="keyboard" @pointerdown="down" @pointermove="move" @pointerup="finish"
-        @pointercancel="finish" @lostpointercapture="finish" @pointerleave="!dragging && (pointer = undefined)"
-        @click.capture="intercept" @dragstart.prevent>
-        <div ref="track" class="rail-track" :style="{ transform: offset ? `translateX(${offset}px)` : undefined }">
-          <article v-for="{ item, index, slot, position, extra } in slots" :key="position" :inert="extra" :aria-hidden="extra || undefined"
-            :class="['rail-item', { 'is-featured': slot === center, 'project-card': kind === 'projects' }]">
-            <div class="card-top"><span>{{ ordinal(index) }} / {{ total }}</span><time v-if="item.date && kind === 'journal'" :datetime="item.date">{{ dateLabel(item.date, locale, true) }}</time></div>
-            <h3><a :href="withBase(item.url)">{{ item.title }}</a></h3>
-            <p>{{ item.description }}</p>
-            <div class="card-bottom">
-              <ul v-if="item.tags.length" class="tag-set"><li v-for="tag in item.tags" :key="tag">{{ tagName(tag, locale) }}</li></ul>
-              <div class="project-links" v-if="kind === 'projects'">
-                <a v-if="item.projectUrl" class="inline-link" :href="item.projectUrl" target="_blank" rel="noopener noreferrer">{{ t.visit }} <Icon name="diagonal" :size="12" /></a>
-                <a class="inline-link" :href="withBase(item.url)">{{ t.details }} <Icon name="arrow" :size="12" /></a>
+      <div class="carousel-stage" :class="{ 'has-controls': moving }">
+        <button v-if="moving" type="button" class="round-button previous" :aria-label="t.previous"
+          :aria-controls="'rail-' + kind" @click="step(-1)"><Icon name="arrow" :size="16" /></button>
+        <div :id="'rail-' + kind" ref="rail" class="rail" :class="{ moving, dragging }" :tabindex="moving ? 0 : undefined" :aria-label="t[kind]"
+          @keydown="keyboard" @pointerdown="down" @pointermove="move" @pointerup="finish"
+          @pointercancel="finish" @lostpointercapture="finish" @pointerleave="!dragging && (pointer = undefined)"
+          @click.capture="intercept" @dragstart.prevent>
+          <div ref="track" class="rail-track">
+            <article v-for="{ item, index, slot, position, extra } in slots" :key="position" :inert="extra" :aria-hidden="extra || undefined"
+              :class="['rail-item', { 'is-featured': slot === center, 'project-card': kind === 'projects' }]">
+              <div class="card-top"><span>{{ ordinal(index) }} / {{ total }}</span><time v-if="item.date && kind === 'journal'" :datetime="item.date">{{ dateLabel(item.date, locale, true) }}</time></div>
+              <h3><a :href="withBase(item.url)">{{ item.title }}</a></h3>
+              <p>{{ item.description }}</p>
+              <div class="card-bottom">
+                <ul v-if="item.tags.length" class="tag-set"><li v-for="tag in item.tags" :key="tag">{{ tagName(tag, locale) }}</li></ul>
+                <div class="project-links" v-if="kind === 'projects'">
+                  <a v-if="item.projectUrl" class="inline-link" :href="item.projectUrl" target="_blank" rel="noopener noreferrer">{{ t.visit }} <Icon name="diagonal" :size="12" /></a>
+                  <a class="inline-link" :href="withBase(item.url)">{{ t.details }} <Icon name="arrow" :size="12" /></a>
+                </div>
+                <span v-else class="card-open" aria-hidden="true"><Icon name="diagonal" :size="17" /></span>
               </div>
-              <span v-else class="card-open" aria-hidden="true"><Icon name="diagonal" :size="17" /></span>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
+        <button v-if="moving" type="button" class="round-button next" :aria-label="t.next"
+          :aria-controls="'rail-' + kind" @click="step(1)"><Icon name="arrow" :size="16" /></button>
       </div>
       <div class="rail-footer" v-if="moving">
-        <span>{{ t.drag }}</span>
-        <div class="rail-pagination">
-          <button v-for="(_, index) in items" :key="index" :aria-label="t.slide.replace('{n}', String(index + 1))"
-            :aria-current="index === selected ? 'true' : undefined" @click="choose(index)"></button>
+        <div class="rail-position" aria-hidden="true">
+          <span class="rail-thumb" :style="{ '--position': progress }"></span>
         </div>
-        <span aria-live="polite">{{ ordinal(selected) }} / {{ total }}</span>
+        <span class="rail-count" aria-live="polite" aria-atomic="true">{{ ordinal(selected) }} / {{ total }}</span>
       </div>
     </template>
   </section>

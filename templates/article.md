@@ -3,11 +3,10 @@ layout: article
 title: '文章标题'
 description: '用一句话介绍文章内容。'
 date: '2026-10-25' # 改为文章发布日期，格式为 YYYY-MM-DD，保留引号
-category: 学习随笔
-directory: 知识整理
+category: 学习随笔 # 可选，显示在正文标题上方
 tags: [Markdown, 学习笔记]
 sample: false
-draft: false # true 会隐藏列表与搜索，但仍会生成可访问的页面
+draft: false # true 会隐藏首页和文章索引，但仍会生成可访问的页面
 ---
 
 ## 简介
