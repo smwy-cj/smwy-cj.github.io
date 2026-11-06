@@ -23,7 +23,10 @@ sample: false
 2. 使用一些 tools (e.g. search engines, calculators) 和 workflows (e.g. specialized prompts)
 
 也正是MCP搭建了如今 harness+llm 的 agent 模式的通信地基
-![MCP 功能示意图](../../public/images/MCP-function.png)
+<figure>
+  <img src="/images/MCP-function.png" width="3840" height="1500" loading="lazy" alt="MCP 功能示意图">
+  <figcaption>MCP 功能示意图</figcaption>
+</figure>
 
 ## MCP 基本架构
 
@@ -33,7 +36,10 @@ MCP 采用经典 **Client - Server** 架构，主要包含三个核心模块
 2. **MCP Client**：Host 内部的协议客户端，通常一个 Server 对应一个 Client 连接
 3. **MCP Server**：向外暴露工具、资源和题时模板的服务程序（通常为 .py 文件）
 
-![MCP 基本架构图](../../public/images/MCP-outline.png)
+<figure>
+  <img src="/images/MCP-outline.png" width="1138" height="614" loading="lazy" alt="MCP 基本架构图">
+  <figcaption>MCP 基本架构图</figcaption>
+</figure>
 
 
 

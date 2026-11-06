@@ -1,6 +1,6 @@
 <script setup lang="ts">
 export interface OutlineHeading { title: string; slug: string; children: OutlineHeading[] }
-defineProps<{ headings: OutlineHeading[]; expanded: Set<string>; active: string }>()
+defineProps<{ headings: OutlineHeading[]; expanded: Set<string>; active: string; english: boolean }>()
 const emit = defineEmits<{ toggle: [slug: string]; select: [slug: string] }>()
 </script>
 
@@ -9,7 +9,7 @@ const emit = defineEmits<{ toggle: [slug: string]; select: [slug: string] }>()
     <li v-for="heading in headings" :key="heading.slug">
       <div class="outline-row">
         <button v-if="heading.children.length" class="outline-toggle"
-          :aria-label="`${expanded.has(heading.slug) ? '收起' : '展开'} ${heading.title}`"
+          :aria-label="`${expanded.has(heading.slug) ? (english ? 'Collapse' : '收起') : (english ? 'Expand' : '展开')} ${heading.title}`"
           :aria-expanded="expanded.has(heading.slug)" @click="emit('toggle', heading.slug)">
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
         </button>
@@ -21,7 +21,7 @@ const emit = defineEmits<{ toggle: [slug: string]; select: [slug: string] }>()
         :class="{ 'is-expanded': expanded.has(heading.slug) }"
         :inert="!expanded.has(heading.slug)" :aria-hidden="!expanded.has(heading.slug)">
         <div class="outline-children-inner">
-          <OutlineBranch :headings="heading.children" :expanded="expanded" :active="active"
+          <OutlineBranch :headings="heading.children" :expanded="expanded" :active="active" :english="english"
             @toggle="emit('toggle', $event)" @select="emit('select', $event)" />
         </div>
       </div>

@@ -1,5 +1,5 @@
 ---
 layout: journal
-title: 知识库
-description: 把零散的知识，慢慢织成自己的地图。
+title: 文章
+description: 技术笔记、实践记录与阶段性的思考。
 ---

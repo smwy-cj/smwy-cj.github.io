@@ -147,7 +147,10 @@ uv run mcp dev server.py
 ```
 
 这会启动开发调试工具。终端将提供可打开的 Inspector 地址。
-![MCP Inspector示意图](../../public/images/MCP-inspector-instance.png)
+<figure>
+  <img src="/images/MCP-inspector-instance.png" width="1128" height="1062" loading="lazy" alt="MCP Inspector 界面">
+  <figcaption>MCP Inspector 调试界面</figcaption>
+</figure>
 
 实际 Inspector 还可以检查 Tool、Resource、Prompt 的注册情况、参数和返回值。
 

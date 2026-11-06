@@ -1,15 +1,17 @@
+import type { Locale } from './site'
+
 export interface Entry {
   url: string
+  key: string
+  locale: Locale
   title: string
   description: string
   date: string
-  category: string
-  directory: string
+  updated: string
   tags: string[]
   layout: 'article' | 'project'
-  cover: string
-  featured: boolean
-  sample: boolean
+  projectUrl: string
+  order: number
   readingTime: number
-  text: string
+  sample: boolean
 }

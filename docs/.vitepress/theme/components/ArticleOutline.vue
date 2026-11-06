@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useData } from 'vitepress'
+import { labels } from '../site'
 import OutlineBranch, { type OutlineHeading } from './OutlineBranch.vue'
 const props = defineProps<{ headings: OutlineHeading[]; pageKey: string }>()
+const { lang } = useData()
 const expanded = ref(new Set<string>())
 const active = ref('')
 let frame = 0
@@ -69,7 +72,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <nav class="article-outline" aria-label="本文目录">
-    <OutlineBranch :headings="headings" :expanded="expanded" :active="active" @toggle="toggle" @select="select" />
+  <nav class="article-outline" :aria-label="labels[lang === 'en' ? 'en' : 'zh'].toc">
+    <OutlineBranch :headings="headings" :expanded="expanded" :active="active" :english="lang === 'en'" @toggle="toggle" @select="select" />
   </nav>
 </template>
