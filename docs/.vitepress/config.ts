@@ -15,7 +15,7 @@ export default defineConfig({
   cleanUrls: false,
   appearance: false,
   lastUpdated: false,
-  scrollOffset: { selector: '.site-header', padding: 16 },
+  scrollOffset: { selector: '.site-header-offset', padding: 16 },
   sitemap: {
     hostname: 'https://smwy-cj.github.io',
     transformItems: items => items.filter(item => !['404.html', 'en/unavailable.html'].includes(item.url))

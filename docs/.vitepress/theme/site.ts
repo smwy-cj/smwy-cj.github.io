@@ -34,7 +34,7 @@ export const labels = {
     skip: '跳到主要内容', more: '关于我的更多信息', allArticles: '查看全部文章',
     allProjects: '查看全部项目', read: '阅读文章', details: '项目简介', visit: '访问项目',
     previous: '上一张', next: '下一张', carousel: '轮播',
-    end: '山抹微云，天连衰草……关于我smwy·cj。', top: '回到顶部',
+    end: '山抹微云，天连衰草…… 秦观在一千多年前写下这首词。', top: '回到顶部',
     writingTitle: '学习笔记与思考记录。', writingIntro: '一些杂七杂八的记录……（玻璃心勿喷）',
     workTitle: '我的项目', workIntro: '一些小破烂demo，或许会出现一些有趣的东西……', topicCount: '个标签',
     latest: '最新', tags: '按标签', all: '全部', entries: '篇文章', works: '个项目', gallery: '画廊', list: '列表',

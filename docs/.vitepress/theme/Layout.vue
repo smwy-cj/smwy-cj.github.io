@@ -18,8 +18,18 @@ const locale = computed<Locale>(() => page.value.relativePath.startsWith('en/') 
 const t = computed(() => labels[locale.value])
 const path = computed(() => routes[locale.value])
 const entry = computed(() => findEntry('/' + page.value.relativePath.replace(/\.md$/, '.html')))
-const progress = ref(0)
-const scrolled = ref(false)
+const header = ref<HTMLElement>()
+const readingProgress = ref<HTMLElement>()
+const headerHidden = ref(false)
+const collapseStart = 24
+const collapseEnd = 160
+let narrowHeader: MediaQueryList
+let reducedMotion: MediaQueryList
+let scrollFrame = 0
+let lastScrollY = 0
+let directionStart = 0
+let scrollDirection = 0
+let lastCompression = -1
 const nav = ref<HTMLElement>()
 const indicator = ref<{ x: number; width: number }>()
 let navObserver: ResizeObserver | undefined
@@ -49,35 +59,80 @@ function languageUrl(target: Locale) {
   const destination = routes[target][section.value || 'home']
   return withBase(destination + (section.value === 'journal' ? query.value : ''))
 }
-function scroll() {
-  scrolled.value = window.scrollY > 12
-  const max = document.documentElement.scrollHeight - window.innerHeight
-  progress.value = max > 0 ? window.scrollY / max : 0
+function revealHeader() {
+  headerHidden.value = false
+  directionStart = lastScrollY
+  scrollDirection = 0
+}
+function updateScroll() {
+  scrollFrame = 0
+  const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+  const y = Math.max(0, Math.min(window.scrollY, maxScroll))
+  const direction = Math.sign(y - lastScrollY)
+  if (direction && direction !== scrollDirection) {
+    directionStart = lastScrollY
+    scrollDirection = direction
+  }
+  lastScrollY = y
+
+  const hideAfter = narrowHeader.matches ? 220 : 320
+  if (y <= collapseEnd || (direction < 0 && directionStart - y >= 24)) {
+    headerHidden.value = false
+  } else if (y >= hideAfter && direction > 0 && y - directionStart >= 12
+    && !header.value?.matches(':has(:focus-visible)')) {
+    headerHidden.value = true
+  }
+
+  const compression = reducedMotion.matches
+    ? Number(y >= collapseEnd)
+    : Math.max(0, Math.min(1, (y - collapseStart) / (collapseEnd - collapseStart)))
+  if (compression !== lastCompression) {
+    header.value?.style.setProperty('--header-compression', String(compression))
+    lastCompression = compression
+  }
+  if (readingProgress.value) {
+    readingProgress.value.style.transform = 'scaleX(' + (maxScroll > 0 ? y / maxScroll : 0) + ')'
+  }
+}
+function scheduleScroll() {
+  if (!scrollFrame) scrollFrame = requestAnimationFrame(updateScroll)
 }
 function sync() {
   query.value = location.search
   hash.value = location.hash
-  scroll()
+  scheduleScroll()
+}
+function syncPage() {
+  lastScrollY = Math.max(0, window.scrollY)
+  revealHeader()
+  sync()
 }
 function alignIndicator() {
   const active = nav.value?.querySelector<HTMLElement>('a[aria-current]')
   indicator.value = active ? { x: active.offsetLeft, width: active.offsetWidth } : undefined
 }
 onMounted(() => {
-  sync()
+  narrowHeader = matchMedia('(max-width: 460px)')
+  reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
+  syncPage()
   alignIndicator()
   navObserver = new ResizeObserver(alignIndicator)
   if (nav.value) navObserver.observe(nav.value)
   nav.value?.querySelectorAll('a').forEach(link => navObserver?.observe(link))
-  window.addEventListener('scroll', scroll, { passive: true })
+  window.addEventListener('scroll', scheduleScroll, { passive: true })
+  window.addEventListener('resize', scheduleScroll)
+  reducedMotion.addEventListener('change', scheduleScroll)
   window.addEventListener('popstate', sync)
   window.addEventListener('hashchange', sync)
 })
-watch(() => route.path, sync, { flush: 'post' })
+watch(() => route.path, syncPage, { flush: 'post' })
 watch([section, locale], alignIndicator, { flush: 'post' })
 onBeforeUnmount(() => {
   navObserver?.disconnect()
-  window.removeEventListener('scroll', scroll)
+  cancelAnimationFrame(scrollFrame)
+  window.removeEventListener('scroll', scheduleScroll)
+  window.removeEventListener('resize', scheduleScroll)
+  reducedMotion?.removeEventListener('change', scheduleScroll)
   window.removeEventListener('popstate', sync)
   window.removeEventListener('hashchange', sync)
 })
@@ -85,7 +140,10 @@ onBeforeUnmount(() => {
 
 <template>
   <a class="skip-link" href="#main-content">{{ t.skip }}</a>
-  <header id="top" class="site-header" :class="{ 'is-scrolled': scrolled }">
+  <div id="top" class="site-header-space" aria-hidden="true">
+    <div class="site-header-offset"></div>
+  </div>
+  <header ref="header" class="site-header" :class="{ 'is-hidden': headerHidden }" @focusin="revealHeader">
     <div class="shell header-inner">
       <a :href="withBase(path.home)" class="brand">
         <img class="brand-avatar" :src="withBase(profile.avatar)" alt="" width="28" height="28" />
@@ -105,8 +163,8 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-    <div v-if="isReading" class="reading-progress" :style="{ transform: 'scaleX(' + progress + ')' }" aria-hidden="true"></div>
   </header>
+  <div v-if="isReading" ref="readingProgress" class="reading-progress" aria-hidden="true"></div>
 
   <div :key="route.path" class="route-content">
     <main v-if="notFound" id="main-content" class="shell" tabindex="-1">
