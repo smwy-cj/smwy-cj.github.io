@@ -13,12 +13,9 @@ const links = computed(() => routes[props.locale])
 
 <template>
   <main id="main-content" class="shell home-page" tabindex="-1">
-    <section class="overview-hero">
-      <div>
-        <div class="eyebrow">{{ t.profile }}</div>
-        <h1>{{ locale === 'zh' ? profile.name : profile.handle }}<span>.</span></h1>
-        <p class="hero-line">{{ profile[locale].tagline }}</p>
-      </div>
+    <h1 class="sr-only">{{ t.home }}</h1>
+    <section class="overview-hero profile-with-avatar">
+      <img class="profile-avatar" :src="withBase(profile.avatar)" :alt="t.avatar" width="80" height="80" />
       <div class="profile-note">
         <p>{{ profile[locale].description }}</p>
         <a class="inline-link" :href="withBase(links.about)">{{ t.more }} <Icon name="diagonal" :size="13" /></a>

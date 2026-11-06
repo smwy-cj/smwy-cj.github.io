@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { withBase } from 'vitepress'
 import { labels, profile, type Locale } from '../site'
 import Icon from './Icon.vue'
 
@@ -11,7 +12,10 @@ const t = computed(() => labels[props.locale])
   <main id="main-content" class="shell about-page" tabindex="-1">
     <div class="page-title">
       <div class="eyebrow">A little about me</div>
-      <h1>{{ t.aboutTitle }}</h1>
+      <div class="about-heading profile-with-avatar">
+        <h1>{{ t.aboutTitle }}</h1>
+        <img class="profile-avatar" :src="withBase(profile.avatar)" :alt="t.avatar" width="64" height="64" />
+      </div>
       <p>{{ profile[locale].tagline }}</p>
     </div>
     <section class="about-row"><h2>{{ t.intro }}</h2><p>{{ profile[locale].description }}</p></section>

@@ -2,6 +2,7 @@ export const profile = {
   name: '山抹微云',
   handle: 'smwy-cj',
   siteName: '山水之间',
+  avatar: '/images/plush-avatar.jpg',
   github: 'https://github.com/smwy-cj',
   email: '241830179@smail.nju.edu.cn',
   zh: {
@@ -28,8 +29,9 @@ export const routes: Record<Locale, Record<Section, string>> = {
 
 export const labels = {
   zh: {
+    avatar: '山抹微云的头像',
     home: '主页', journal: '文章', projects: '项目', about: '关于', navigation: '主导航',
-    skip: '跳到主要内容', profile: '个人概览', more: '关于我的更多信息', allArticles: '查看全部文章',
+    skip: '跳到主要内容', more: '关于我的更多信息', allArticles: '查看全部文章',
     allProjects: '查看全部项目', read: '阅读文章', details: '项目简介', visit: '访问项目',
     previous: '上一张', next: '下一张', carousel: '轮播', slide: '第 {n} 张', drag: '拖动卡片 / 左右切换',
     end: '关于我，以及我最近在关注的事。', top: '回到顶部',
@@ -44,8 +46,9 @@ export const labels = {
     code: '代码', copy: '复制代码', copied: '已复制', copyFailed: '复制失败，请手动选择代码。', step: '步骤'
   },
   en: {
+    avatar: 'Avatar of smwy-cj',
     home: 'Home', journal: 'Writing', projects: 'Projects', about: 'About', navigation: 'Main navigation',
-    skip: 'Skip to content', profile: 'Personal overview', more: 'More about me', allArticles: 'View all writing',
+    skip: 'Skip to content', more: 'More about me', allArticles: 'View all writing',
     allProjects: 'View all projects', read: 'Read article', details: 'Project notes', visit: 'Visit project',
     previous: 'Previous slide', next: 'Next slide', carousel: 'Carousel', slide: 'Slide {n}', drag: 'Drag to explore / Use arrows',
     end: 'A little more about me and what I’m exploring.', top: 'Back to top',

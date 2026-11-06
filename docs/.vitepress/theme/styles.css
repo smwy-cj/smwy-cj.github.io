@@ -44,8 +44,9 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
 .site-header { position: sticky; z-index: 10; top: 0; background: rgb(255 255 255 / .95); backdrop-filter: blur(14px); }
 .header-inner, .header-right, .header-right nav, .langs { display: flex; align-items: center; }
 .header-inner { height: 94px; justify-content: space-between; gap: 18px; }
-.brand { font-size: 18px; font-weight: 650; letter-spacing: -.045em; white-space: nowrap; }
-.brand span, .overview-hero h1 span { color: #929292; }
+.brand { display: inline-flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 650; letter-spacing: -.045em; white-space: nowrap; }
+.brand-avatar { flex: none; width: clamp(24px, 3vw, 28px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
+.brand-period { color: #929292; }
 .header-right { gap: 38px; }
 .header-right nav { position: relative; gap: 23px; }
 .header-right nav a { display: flex; align-items: center; min-height: 44px; border-bottom: 2px solid transparent; color: var(--muted); font-size: 13px; transition: color .24s; white-space: nowrap; }
@@ -61,11 +62,12 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
 .inline-link svg { transition: transform .2s; }
 .inline-link:hover { border-color: currentColor; }
 .inline-link:hover svg { transform: translate(2px, -2px); }
-.overview-hero { display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: 70px; padding: 76px 0 70px; animation: section-enter .65s var(--ui-ease) backwards; }
-.overview-hero h1 { font-size: clamp(56px, 7vw, 76px); font-weight: 550; letter-spacing: -.065em; line-height: 1.05; margin: 23px 0 20px; }
-.hero-line { font-size: 20px; line-height: 1.5; letter-spacing: -.025em; margin: 0; }
-.profile-note { padding-top: 25px; }
-.profile-note p { font-size: 14px; color: var(--muted); line-height: 1.9; max-width: 360px; margin: 0 0 22px; }
+.overview-hero { padding: 64px 0 56px; animation: section-enter .65s var(--ui-ease) backwards; }
+.profile-note p { font-size: 14px; color: var(--muted); line-height: 1.9; max-width: 440px; margin: 0 0 12px; }
+.profile-with-avatar { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: clamp(14px, 2vw, 22px); }
+.profile-avatar { display: block; width: clamp(64px, 8vw, 80px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; }
+.about-heading.profile-with-avatar { grid-template-columns: auto 64px; justify-content: start; }
+.about-heading .profile-avatar { width: 64px; }
 .collection { margin-bottom: 85px; animation: section-enter .7s var(--ui-ease) backwards; }
 .collection:nth-of-type(2) { animation-delay: .07s; }
 .collection:nth-of-type(3) { animation-delay: .14s; }
@@ -268,11 +270,8 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
 }
 @media (max-width: 800px) {
   .shell { width: calc(100% - 48px); }
-  .overview-hero { grid-template-columns: 1fr; gap: 22px; padding: 42px 0 45px; }
-  .overview-hero h1 { font-size: 57px; }
-  .profile-note { padding: 0; }
-  .profile-note p { max-width: 480px; }
-  main.shell > :is(.collection, .home-end, .gallery-grid) { max-width: 440px; }
+  .overview-hero { padding: 38px 0 36px; }
+  main.shell > :is(.overview-hero, .collection, .home-end, .gallery-grid) { max-width: 440px; }
   .collection { margin-bottom: 55px; }
   .rail { --gap: 20px; --slot: 100%; padding: 15px 0 24px; }
   .rail-item { min-height: 390px; padding: 28px; }
@@ -289,7 +288,6 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
   .about-row { grid-template-columns: 1fr; gap: 12px; }
 }
 @media (max-width: 600px) {
-  .profile-note p { margin-bottom: 13px; }
   .reader-title { padding: 30px 0; }
   .reader-title h1, .about-page .page-title h1 { font-size: 32px; }
   .reader-title p { font-size: 14px; }
@@ -303,9 +301,6 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
   .header-right nav { gap: clamp(12px, 5vw, 22px); }
   .header-right nav a { font-size: 12px; }
   .langs { gap: 4px; }
-  .overview-hero { padding-top: 35px; }
-  .overview-hero h1 { font-size: 51px; }
-  .hero-line { font-size: 17px; }
   .collection-heading.has-controls .inline-link { position: absolute; right: 0; bottom: -11px; padding: 0; margin: 0; font-size: 10px; }
   .collection-heading { position: relative; }
   .round-button { width: 38px; height: 38px; }

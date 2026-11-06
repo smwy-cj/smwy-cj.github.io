@@ -21,7 +21,8 @@ export default defineConfig({
     transformItems: items => items.filter(item => !['404.html', 'en/unavailable.html'].includes(item.url))
   },
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/plush-icon-32.png' }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/plush-icon-180.png' }],
     ['meta', { name: 'theme-color', content: '#ffffff' }],
     ['meta', { property: 'og:type', content: 'website' }]
   ],

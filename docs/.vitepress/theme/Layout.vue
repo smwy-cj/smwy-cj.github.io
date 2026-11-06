@@ -85,7 +85,10 @@ onBeforeUnmount(() => {
   <a class="skip-link" href="#main-content">{{ t.skip }}</a>
   <header id="top" class="site-header">
     <div class="shell header-inner">
-      <a :href="withBase(path.home)" class="brand">{{ locale === 'zh' ? profile.name : profile.handle }}<span>.</span></a>
+      <a :href="withBase(path.home)" class="brand">
+        <img class="brand-avatar" :src="withBase(profile.avatar)" alt="" width="28" height="28" />
+        <span>{{ locale === 'zh' ? profile.name : profile.handle }}<span class="brand-period">.</span></span>
+      </a>
       <div class="header-right">
         <nav ref="nav" :aria-label="t.navigation" :class="{ 'has-indicator': indicator }">
           <a v-for="item in sections" :key="item" :href="withBase(path[item])"
