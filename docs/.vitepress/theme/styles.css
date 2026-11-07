@@ -403,3 +403,16 @@ main.shell > :not(.reader), .foot { max-width: 960px; margin-inline: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
   .rail-item, .rail:not(.dragging) .rail-item:not(.is-featured):hover, .work-stage:hover .work-word, .work-stage:hover .work-bottom svg, .archive-row:hover h3 { transform: none; }
 }
+
+.home-end > span {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-line;
+  line-height: 2;
+}
+
+.home-end > .inline-link {
+  flex-shrink: 0;
+  align-self: flex-start;
+  white-space: nowrap;
+}

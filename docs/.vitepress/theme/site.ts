@@ -7,13 +7,17 @@ export const profile = {
   email: '241830179@smail.nju.edu.cn',
   zh: {
     tagline: '个人信息',
+    // 首页简介和站点默认描述
     description: '你好，我是山抹微云（smwy-cj），南京大学软件工程（智能化软件）专业大三在读。这里是我的个人博客，记录我的日常学习和思考。欢迎和我联系！',
+    aboutIntro: '你好，我是山抹微云（smwy-cj），南京大学软件工程（智能化软件）专业大三在读。这里是我的个人博客，记录我的日常学习和思考。我希望通过这里的内容，和大家分享我的学习经验和技术见解，也欢迎大家和我交流！',
     interests: ['LLM 与 Agent', '金融','地缘政治','东玄', '体育与音乐'],
     focus: '我喜欢探索 LLM、Agent 和 RAG 等前沿技术革新，也喜欢研究C++、Java与JavaScript等语言与底层架构。'
   },
   en: {
     tagline: 'Technical notes and projects.',
+    // Home introduction and default site description
     description: 'Hi, I’m smwy-cj, a third-year undergraduate student majoring in Software Engineering (Intelligent Software) at Nanjing University. This is my personal blog. I write about my learning and thinking. Feel free to reach out!',
+    aboutIntro: 'Hi, I’m smwy-cj, a third-year undergraduate student majoring in Software Engineering (Intelligent Software) at Nanjing University. This is my personal blog. I write about my learning and thinking. Feel free to reach out!',
     interests: ['AI and agents', 'Finance', 'Geopolitics', 'Eastern fantasy', 'Sports and music'],
     focus: 'I enjoy exploring cutting-edge technologies like LLMs, Agents, and RAG, as well as delving into programming languages and underlying architectures such as C++, Java, and JavaScript.'
   }
@@ -34,7 +38,7 @@ export const labels = {
     skip: '跳到主要内容', more: '关于我的更多信息', allArticles: '查看全部文章',
     allProjects: '查看全部项目', read: '阅读文章', details: '项目简介', visit: '访问项目',
     previous: '上一张', next: '下一张', carousel: '轮播',
-    end: '山抹微云，天连衰草…… 秦观在一千多年前写下这首词。', top: '回到顶部',
+    end: '山抹微云，天连衰草，画角声断谯门。暂停征棹，聊共引离尊。\n多少蓬莱旧事，空回首，烟霭纷纷。斜阳外，寒鸦万点，流水绕孤村。\n销魂，当此际，香囊暗解，罗带轻分。\n谩赢得青楼，薄幸名存。\n此去何时见也，襟袖上，空惹啼痕。伤情处，高城望断，灯火已黄昏。', top: '回到顶部',
     writingTitle: '学习笔记与思考记录。', writingIntro: '一些杂七杂八的记录……（玻璃心勿喷）',
     workTitle: '我的项目', workIntro: '一些小破烂demo，或许会出现一些有趣的东西……', topicCount: '个标签',
     latest: '最新', tags: '按标签', all: '全部', entries: '篇文章', works: '个项目', gallery: '画廊', list: '列表',

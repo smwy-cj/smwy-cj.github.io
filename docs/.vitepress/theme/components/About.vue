@@ -18,7 +18,7 @@ const t = computed(() => labels[props.locale])
       </div>
       <p>{{ profile[locale].tagline }}</p>
     </div>
-    <section class="about-row"><h2>{{ t.intro }}</h2><p>{{ profile[locale].description }}</p></section>
+    <section class="about-row"><h2>{{ t.intro }}</h2><p>{{ profile[locale].aboutIntro }}</p></section>
     <section class="about-row"><h2>{{ t.focus }}</h2><p>{{ profile[locale].focus }}</p></section>
     <section class="about-row"><h2>{{ t.interests }}</h2><p>{{ profile[locale].interests.join(' / ') }}</p></section>
     <section class="about-row"><h2>{{ t.contact }}</h2><div class="project-links">
