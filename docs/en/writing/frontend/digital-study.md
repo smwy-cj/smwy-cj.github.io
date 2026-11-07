@@ -45,4 +45,3 @@ Keep the content format consistent and improve the design as the site grows. For
 ## Further reading
 
 - [Project notes for Shanshui](/en/projects/web/shanshui.md)
-- [Turn your notes into a knowledge map (Chinese)](/journal/notes/knowledge-map.md)

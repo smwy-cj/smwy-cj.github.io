@@ -10,9 +10,12 @@ source: https://github.com/smwy-cj/smwy-cj.github.io
 
 <script setup>
 import { computed } from 'vue'
-import { entriesFor } from '../../.vitepress/theme/entries'const noteCount = computed(() => entriesFor('zh', 'article').length)
+import { entriesFor } from '../../.vitepress/theme/entries'
+
+const noteCount = computed(() => entriesFor('zh', 'article').length)
 const projectCount = computed(() => entriesFor('zh', 'project').length)
 </script>
+
 ## 项目简介
 
 [「山抹微云·微云集」](https://github.com/smwy-cj/smwy-cj.github.io)是我的个人博客项目。我希望用它来记录一些我的日常学习与胡乱思考，希望我能够坚持下去……
