@@ -34,7 +34,7 @@ export const routes: Record<Locale, Record<Section, string>> = {
 export const labels = {
   zh: {
     avatar: '山抹微云的头像',
-    home: '主页', journal: '文章', projects: '项目', about: '关于', navigation: '主导航',
+    home: '主页', journal: '学习笔记', projects: '项目demo', about: '关于', navigation: '主导航',
     skip: '跳到主要内容', more: '关于我的更多信息', allArticles: '查看全部文章',
     allProjects: '查看全部项目', read: '阅读文章', details: '项目简介', visit: '访问项目',
     previous: '上一张', next: '下一张', carousel: '轮播',
