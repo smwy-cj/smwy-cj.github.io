@@ -17,8 +17,8 @@ async function render() {
       flowchart: { htmlLabels: false, nodeSpacing: 28, rankSpacing: 40, useMaxWidth: true },
       themeVariables: {
         fontFamily: 'Arial, "Microsoft YaHei", sans-serif', fontSize: '15px',
-        primaryColor: '#eef0e7', primaryTextColor: '#303b32', primaryBorderColor: '#89947d',
-        lineColor: '#78836f', secondaryColor: '#f7f5ef', tertiaryColor: '#e7ebdf',
+        primaryColor: '#eef5f1', primaryTextColor: '#303833', primaryBorderColor: '#8eafa0',
+        lineColor: '#687e70', secondaryColor: '#f6f8f7', tertiaryColor: '#dfebe4',
       },
     })
     const result = await mermaid.render(`diagram-${crypto.randomUUID()}`, props.source)

@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { profile } from './theme/site'
+import vitesseLight from '@shikijs/themes/vitesse-light'
 
 export default defineConfig({
   title: `${profile.name} · ${profile.siteName}`,
@@ -32,15 +33,43 @@ export default defineConfig({
       const fence = md.renderer.rules.fence!
       md.renderer.rules.fence = (tokens, index, options, env, self) => {
         const token = tokens[index]
-        if (token.info.trim() === 'mermaid') {
+        const info = token.info.trim()
+        if (info === 'mermaid') {
           return `<MermaidDiagram source="${md.utils.escapeHtml(token.content)}" />`
         }
+        const language = info.split(/[\s:{\[]/, 1)[0].toLowerCase()
+        const filename = info.match(/\[([^\]]+)\]/)?.[1]
+        const languageNames: Record<string, string> = {
+          ts: 'TypeScript', js: 'JavaScript', vue: 'Vue', python: 'Python', py: 'Python',
+          bash: 'Bash', sh: 'Shell', json: 'JSON', yaml: 'YAML', toml: 'TOML',
+          html: 'HTML', css: 'CSS', text: 'Text', '': 'Text'
+        }
+        // Short terminal commands do not need a line-number gutter.
+        if (/^(bash|sh|shell|console)$/.test(language)
+          && token.content.trimEnd().split('\n').length <= 3 && !info.includes(':line-numbers')) {
+          token.info += ' :no-line-numbers'
+        }
+        const label = md.utils.escapeHtml(filename || languageNames[language] || language)
         return fence(tokens, index, options, env, self)
+          .replace(/<span class="lang">[^<]*<\/span>/,
+            () => `<span class="lang" title="${label}">${label}</span>`)
       }
     },
     headers: { level: [2, 3] },
     codeCopyButtonTitle: '复制代码 / Copy code',
-    theme: 'github-light',
+    theme: {
+      ...vitesseLight,
+      name: 'weiyun-light',
+      colors: {
+        ...vitesseLight.colors,
+        'editor.background': '#F6F8F7',
+        'editor.foreground': '#2D3C36'
+      },
+      tokenColors: [
+        ...(vitesseLight.tokenColors || []),
+        { scope: ['comment', 'punctuation.definition.comment'], settings: { foreground: '#66776F' } }
+      ]
+    },
     lineNumbers: true
   },
   transformPageData(page, { siteConfig }) {

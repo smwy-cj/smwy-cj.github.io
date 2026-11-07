@@ -13,11 +13,11 @@ sample: false
 
 它提供三个能力：检查目标分解结构、读取 KAOS 建模规则、提供需求分析提示模板。
 
-### Step 1：创建项目
+## Step 1：创建项目
 
 建议使用 Python 和官方 MCP SDK。
 
-```
+```bash
 # 创建项目
 uv init goal-mcp
 cd goal-mcp
@@ -32,18 +32,18 @@ uv add "mcp[cli]"
 
 项目目录：
 
-```
+```text
 goal-mcp/
 ├── server.py
 ├── pyproject.toml
 └── uv.lock
 ```
 
-### Step 2：编写 MCP Server
+## Step 2：编写 MCP Server
 
 在 `server.py` 中编写：
 
-```Python
+```python [server.py]
 
 from mcp.server import MCPServer
 
@@ -138,11 +138,11 @@ SDK 会根据函数名称、类型注解与文档字符串生成工具定义和�
 
 需要明确的是，这里的 `validate_goal_structure` 只能进行基础结构校验，无法证明 AND/OR 分解在语义上正确。后者还需要领域逻辑、约束求解或模型推理。
 
-### Step 3：运行和调试
+## Step 3：运行和调试
 
 可以使用官方 MCP Inspector：
 
-```
+```bash
 uv run mcp dev server.py
 ```
 
@@ -154,11 +154,11 @@ uv run mcp dev server.py
 
 实际 Inspector 还可以检查 Tool、Resource、Prompt 的注册情况、参数和返回值。
 
-### Step 4：连接到 Codex
+## Step 4：连接到 Codex
 
 如果你使用 VS Code 中的 Codex 或 Codex CLI，可以在 `~/.codex/config.toml` 中添加：
 
-```
+```toml [config.toml]
 
 [mcp_servers.goal_modeling]
 command = "uv"
@@ -177,7 +177,7 @@ args = [
 
 配置后可执行：
 
-```
+```bash
 codex mcp list
 ```
 
@@ -189,7 +189,7 @@ codex mcp list
 
 Codex 就可以发现相应 Tool，并决定是否调用。
 
-### Step 5：本地和远程部署
+## Step 5：本地和远程部署
 
 MCP 常见的两种传输方式如下：
 
@@ -204,7 +204,7 @@ MCP 常见的两种传输方式如下：
 
 如果希望创建一个 HTTP MCP 服务，可以运行：
 
-```
+```bash
 uv run mcp run server.py --transport streamable-http
 ```
 

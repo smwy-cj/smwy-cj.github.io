@@ -23,6 +23,7 @@ const back = computed(() => withBase(routes[props.locale][section.value] + retur
 const copied = ref('')
 let timer: ReturnType<typeof setTimeout>
 let copiedButton: HTMLButtonElement | undefined
+let copyRequest = 0
 onMounted(() => {
   if (section.value === 'journal') {
     const from = new URLSearchParams(location.search).get('from')
@@ -31,9 +32,10 @@ onMounted(() => {
   document.querySelectorAll<HTMLButtonElement>('.prose button.copy').forEach(button => {
     button.title = t.value.copy
     button.setAttribute('aria-label', t.value.copy)
+    button.textContent = t.value.copy
   })
 })
-onBeforeUnmount(() => clearTimeout(timer))
+onBeforeUnmount(() => { clearTimeout(timer); copyRequest++ })
 async function goBack(event: MouseEvent) {
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return
   event.preventDefault()
@@ -51,25 +53,35 @@ async function copy(event: MouseEvent) {
   const code = button?.parentElement?.querySelector('pre code')
   if (!button || !code) return
   event.stopPropagation()
+  const request = ++copyRequest
   clearTimeout(timer)
   copiedButton?.classList.remove('copied')
+  if (copiedButton) copiedButton.textContent = t.value.copy
   copiedButton = button
   copied.value = ''
   const clean = code.cloneNode(true) as HTMLElement
   clean.querySelectorAll('.vp-copy-ignore, .diff.remove').forEach(node => node.remove())
   try {
     await navigator.clipboard.writeText((clean.textContent || '').replace(/\n$/, ''))
+    if (request !== copyRequest) return
     button.classList.add('copied')
+    button.textContent = t.value.copied
     copied.value = t.value.copied
   } catch {
+    if (request !== copyRequest) return
     const selection = window.getSelection()
     const range = document.createRange()
     range.selectNodeContents(code)
     selection?.removeAllRanges()
     selection?.addRange(range)
     copied.value = t.value.copyFailed
+    button.textContent = props.locale === 'zh' ? '请手动复制' : 'Select to copy'
   }
-  timer = setTimeout(() => { button.classList.remove('copied'); copied.value = '' }, 1800)
+  timer = setTimeout(() => {
+    button.classList.remove('copied')
+    button.textContent = t.value.copy
+    copied.value = ''
+  }, 1500)
 }
 </script>
 
@@ -98,7 +110,7 @@ async function copy(event: MouseEvent) {
         <article>
           <a v-if="entry?.projectUrl" class="inline-link project-visit" :href="entry.projectUrl" target="_blank" rel="noopener noreferrer">{{ t.visit }} <Icon name="diagonal" :size="13" /></a>
           <div class="prose vp-doc" @click.capture="copy"><Content /></div>
-          <div class="copy-feedback" role="status" :class="{ 'sr-only': !copied }">{{ copied }}</div>
+          <div class="sr-only" role="status">{{ copied }}</div>
           <nav v-if="related.length" class="related" :aria-label="t.related">
             <h2>{{ t.related }}</h2>
             <a v-for="item in related" :key="item.url" :href="withBase(item.url)">{{ item.title }} <Icon name="diagonal" :size="13" /></a>
