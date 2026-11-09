@@ -37,7 +37,7 @@ Web 应用经历了由**静态 HTML 页面**、**原生 JavaScript 操作 DOM**�
 
 ### 2.1 Web 技术栈整体框架一览
 
-![image-20261109160945937](D:\Desktop\summer_pro\pesonal page\smwy-cj.github.io\docs\journal\frontend\images\Web-full-stack-outline.png)
+![image-20261109160945937](./images/Web-full-stack-outline.png)
 
 #### 表格一览：
 
