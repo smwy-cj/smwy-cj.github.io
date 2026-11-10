@@ -13,7 +13,6 @@ const mobile = ref(false)
 const rail = ref<HTMLElement>()
 const track = ref<HTMLElement>()
 const dragging = ref(false)
-const visualFocus = ref(0)
 let media: MediaQueryList
 let animation: Animation | undefined
 let queued: number | undefined
@@ -28,14 +27,13 @@ const visible = computed(() => mobile.value ? 1 : Math.min(3, count.value))
 const left = computed(() => mobile.value ? 0 : 1)
 const wrap = (index: number) => (index % count.value + count.value) % count.value
 const slots = computed(() => {
-  if (!moving.value) return props.items.map((item, index) => ({ item, index, slot: index, position: index, extra: false }))
+  if (!moving.value) return props.items.map((item, index) => ({ item, index, position: index, extra: false }))
   return Array.from({ length: visible.value + 2 }, (_, slot) => {
     const position = current.value + slot - left.value - 1
     const index = wrap(position)
-    return { item: props.items[index], index, slot, position, extra: slot === 0 || slot > visible.value }
+    return { item: props.items[index], index, position, extra: slot === 0 || slot > visible.value }
   })
 })
-const center = computed(() => moving.value ? left.value + 1 + visualFocus.value : wrap(current.value))
 const selected = computed(() => wrap(current.value))
 const progress = computed(() => count.value > 1 ? selected.value / (count.value - 1) : 0)
 const ordinal = (index: number) => String(index + 1).padStart(2, '0')
@@ -53,7 +51,6 @@ function stop() {
   pointer = undefined
   dragging.value = false
   if (track.value) track.value.style.transform = ''
-  visualFocus.value = 0
   queued = undefined
 }
 function step(direction: number) {
@@ -79,7 +76,6 @@ function animateStep(direction: number) {
     return
   }
   const end = direction === 0 ? 0 : -direction * (width || stepWidth(trackElement))
-  visualFocus.value = direction
   const run = trackElement.animate(
     [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
     { duration: direction === 0 ? 180 : 480, easing: 'cubic-bezier(.25,.7,.35,1)', fill: 'forwards' }
@@ -88,7 +84,6 @@ function animateStep(direction: number) {
   run.onfinish = async () => {
     if (animation !== run) return
     current.value += direction
-    visualFocus.value = 0
     await nextTick()
     if (animation !== run) return
     const nextDirection = queued
@@ -178,8 +173,8 @@ onBeforeUnmount(() => {
           @pointercancel="finish" @lostpointercapture="finish" @pointerleave="!dragging && (pointer = undefined)"
           @click.capture="intercept" @dragstart.prevent>
           <div ref="track" class="rail-track">
-            <article v-for="{ item, index, slot, position, extra } in slots" :key="position" :inert="extra" :aria-hidden="extra || undefined"
-              :class="['rail-item', { 'is-featured': slot === center, 'project-card': kind === 'projects' }]">
+            <article v-for="{ item, index, position, extra } in slots" :key="position" :inert="extra" :aria-hidden="extra || undefined"
+              :class="['rail-item', { 'project-card': kind === 'projects' }]">
               <div class="card-top"><span>{{ ordinal(index) }} / {{ total }}</span><time v-if="item.date && kind === 'journal'" :datetime="item.date">{{ dateLabel(item.date, locale, true) }}</time></div>
               <h3><a :href="withBase(item.url)">{{ item.title }}</a></h3>
               <p>{{ item.description }}</p>
