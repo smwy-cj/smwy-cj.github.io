@@ -14,7 +14,7 @@ draft: false
 
 Agent 工作模式简易展示：
 
-![figure1:React循环简易展示](./images/React-arch)
+![figure1:React循环简易展示](./images/React-arch.png)
 
 **ReAct A-T-O 架构**：用户交互模式——Actions, Thoughts, Observations，长对话任务中随着迭代次数增加，**模型历史上下文不断加长**。
 $$
@@ -73,7 +73,7 @@ $$
 
 最常见的压缩方法：
 
-![image-20261117174027243](./images/Compression-display)
+![image-20261117174027243](./images/Compression-display.png)
 
 典型实现是直接开一个独立的轮次让 LLM 调用生成结构化摘要，记录当前任务、已经完成的工作、关键决策、约束、失败原因以及接下来需要执行的操作。
 
@@ -187,7 +187,7 @@ OpenAI API
 
 对于大部分普通 Agent，可采用以下架构：
 
-<img src="./images/architecture-cc" alt="image-20261117203300840" style="zoom:50%;" />
+<img src="./images/architecture-cc.png" alt="image-20261117203300840" style="zoom:50%;" />
 
 重点是将**用户约束**、**任务目标**、**已确认决策**等信息单独保留，同时保证摘要后的 Agent 能定位原始证据。
 
