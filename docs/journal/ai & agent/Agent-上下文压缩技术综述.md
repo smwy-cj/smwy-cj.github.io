@@ -14,7 +14,7 @@ draft: false
 
 Agent 工作模式简易展示：
 
-![figure1:React循环简易展示](C:\Users\cjsmwy\AppData\Roaming\Typora\typora-user-images\image-20261117171309037.png)
+![figure1:React循环简易展示](./images/React-arch)
 
 **ReAct A-T-O 架构**：用户交互模式——Actions, Thoughts, Observations，长对话任务中随着迭代次数增加，**模型历史上下文不断加长**。
 $$
